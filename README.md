@@ -1,2 +1,3 @@
-# THI_Test
-Test für Semesterarbeit
+# Semesterarbeit
+Semesterarbeit von Stefan Hutter, Philipp Tuor, Rade Ilic
+
