@@ -6,23 +6,23 @@ import org.junit.jupiter.api.Test;
 class TankTest {
 
     @Test
-    void CreateShip_returnLength() {
-        Tank tank = new Tank(5);
+    void CreateTank_returnHorizontalPosition() {
+        Tank tank = new Tank(5,0);
 
-        int resultLength = tank.getLength();
+        int resultHorizontalPosition = tank.getHorizontalPosition();
 
-        Assertions.assertEquals(5, resultLength);
+        Assertions.assertEquals(5, resultHorizontalPosition);
     }
 
 
 
     @Test
-    void CreateShipSetLegnth_getLengt_returnsCorrectLength() {
-        Tank tank = new Tank(5);
-        tank.setLegnth(3);
+    void CreateTankSetHorizontalPosition_getHorizontalPosition_returnsCorrectHorizontalPosition() {
+        Tank tank = new Tank(5,0);
+        tank.setHorizontalPosition(3);
 
-        int resultLength = tank.getLength();
+        int resultHorizontalPosition = tank.getHorizontalPosition();
 
-        Assertions.assertEquals(3,resultLength);
+        Assertions.assertEquals(3,resultHorizontalPosition);
     }
 }
