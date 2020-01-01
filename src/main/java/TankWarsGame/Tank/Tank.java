@@ -1,27 +1,42 @@
 package TankWarsGame.Tank;
 
+// TODO --> not sure if this calss is ever used, maybe when tanks have different sizes??
 public class Tank {
-    private int length =0;
+     private int length =0;
+     private int horizontalPosition;
+     private int verticalPosition;
 
 
-    /*********************************
-     * Constructors
-     **/
+     /*********************************
+      * Constructors
+      **/
 
-    // constructor to create a ship
-    public Tank(int length){
-        this.length = length;
+     // default constructor with default tank size
+     public Tank(int horizontalPosition, int verticalPosition){
+         this.length = 1;
+         this.horizontalPosition = horizontalPosition;
+         this.verticalPosition = verticalPosition;
+     }
+
+
+     /*********************************
+      * getter and setter methods
+      **/
+
+     public int getHorizontalPosition() {
+         return horizontalPosition;
+     }
+
+     public int getVerticalPosition() {
+         return verticalPosition;
+     }
+
+     public void setHorizontalPosition(int horizontalPosition) {
+         this.horizontalPosition = horizontalPosition;
+     }
+
+     public void setVerticalPosition(int verticalPosition) {
+            this.verticalPosition = verticalPosition;
+        }
+
     }
-
-
-    /*********************************
-     * getter and setter methods
-     **/
-    public int getLength() {
-        return length;
-    }
-
-    public void setLegnth(int length) {
-    this.length = length;
-    }
-}
