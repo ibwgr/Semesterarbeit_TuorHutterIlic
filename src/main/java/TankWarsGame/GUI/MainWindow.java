@@ -79,14 +79,14 @@ public class MainWindow extends Application {
     private Cell createOwnCell(int horizontal, int vertical){
         Cell cell = new Cell();
         cell.setOnMouseClicked(event -> {
-            if (!startupDone && cell.getFill() != Color.YELLOW) {
+            if (!startupDone && cell.getFill() != Color.GREEN) {
                 try {
                     ownPlayer.field.placeTank(horizontal, vertical);
                 } catch (FieldOccupiedException fo) {
                 }
                 numberOfPlacedTanks.set(numberOfPlacedTanks.get() + 1);
-                cell.setFill(Color.YELLOW);
-                cell.setStroke(Color.BLACK);
+                cell.setFill(Color.GREEN);
+                cell.setStroke(Color.ORANGE);
             }
         });
         return cell;
@@ -164,7 +164,9 @@ public class MainWindow extends Application {
             ownField.setGridLinesVisible(true);
 
             // check iff all tanks have been placed
-            tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(finalTanksToPlace));
+            //!!!!!! StartScreen.numberOfTanks ursprünglich finalTanksToPlace
+            // TODO <-- Controll this change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(StartScreen.numberOfTanks));
             tanksPlaced.addListener((observable, oldValue, newValue) -> {
                 // Only if completed
                 if (newValue)
