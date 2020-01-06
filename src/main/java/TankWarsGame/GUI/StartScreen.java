@@ -31,16 +31,20 @@ public class StartScreen extends Application {
         // set title for the stage
         s.setTitle("Tank Wars");
 
-        // create TitleLabel "Tankwars" with black color
+        // create TitleLabel "Tankwars" with White color
         Label startGameScreenTitle = new Label("Tank Wars");
         startGameScreenTitle.setFont(Font.font("Monospaced",50));
         startGameScreenTitle.setTextFill(Color.web("#000000"));
+
+        // create Labels
+        Label labelInstruction = new Label("Please write the number of tanks to Play with ");
+        labelInstruction.setPrefSize(150,200);
 
         // create buttons
         Button buttonPlay = new Button("Play!");
         buttonPlay.setPrefSize(150,40);
 
-        Button buttonNumber = new Button("Confirm Number of the Tanks");
+        Button buttonNumber = new Button("Confirm");
         buttonPlay.setPrefSize(150,40);
 
         Button buttonCancel = new Button("Cancel");
@@ -53,6 +57,8 @@ public class StartScreen extends Application {
         // create Textfield and read Int
         TextField textfieldNumberOfTanks = new TextField();
         textfieldNumberOfTanks.setPrefSize(150, 40);
+        //set pre Text in Textfield
+        textfieldNumberOfTanks.setPromptText("With how many Tanks? 1-10");
 
 
 /*******************************************************************************/
@@ -62,19 +68,12 @@ public class StartScreen extends Application {
         GridPane startGameGrid = new GridPane();
         startGameGrid.setAlignment(Pos.CENTER);
 
-        // set Font to Monospaced
-        startGameGrid.setStyle("-fx-font-family: Monospaced");
-
-        //Set gridpane lines true or false (debug)
-        startGameGrid.setGridLinesVisible(false);
-
         // Setup for Gridpane
         startGameGrid.setPrefSize(1200, 700);
         startGameGrid.setVgap(20);
-        startGameGrid.setHgap(10);
 
         // add to Gridpane in the Center of the startgamePane
-        startGameGrid.getChildren().addAll(startGameScreenTitle, comboBoxGameSetting, buttonCancel, textfieldNumberOfTanks, buttonNumber);
+        startGameGrid.getChildren().addAll(startGameScreenTitle, comboBoxGameSetting, buttonCancel, textfieldNumberOfTanks, buttonNumber, labelInstruction);
 
         //Die Objekte auf dem Gridpane verteilen
         GridPane.setConstraints(startGameScreenTitle, 0, 0);
@@ -82,6 +81,9 @@ public class StartScreen extends Application {
 
         GridPane.setConstraints(buttonPlay, 0,1);
         GridPane.setHalignment(buttonPlay, HPos.CENTER);
+        //TODO not this label. this label already stads in the textbox
+        GridPane.setConstraints(labelInstruction, 0,2);
+        GridPane.setHalignment(labelInstruction, HPos.CENTER);
 
         GridPane.setConstraints(buttonNumber, 0,5);
         GridPane.setHalignment(buttonNumber, HPos.CENTER);
@@ -96,13 +98,27 @@ public class StartScreen extends Application {
         GridPane.setHalignment(buttonCancel, HPos.CENTER);
 
 /*******************************************************************************/
+// set colors and style
+/*******************************************************************************/
+
+        // set Font to Monospaced
+        startGameGrid.setStyle("-fx-font-family: Monospaced");
+
+        startGameScreenTitle.setStyle("-fx-text-fill: #FFF");
+        //set background color
+        startGameGrid.setStyle("-fx-background-color: #000;");
+
+        //Set gridpane lines true or false (debug)
+        startGameGrid.setGridLinesVisible(true);
+
+/*******************************************************************************/
 // Creating Buttonevents (ButtonPlay, Confirm Fieldsize, Cancel)
 /*******************************************************************************/
 
         //the number of Tanks confirm done with a label, other way: with do while and break;
         //TODO -> LabelOutput when not number!!!
         buttonNumber.setOnMouseClicked(mouseEvent -> {
-            //Setting the Max rules for the field
+            //Setting the Max rules for how many tanks you can place
             label: try {
                 numberOfTanks = Integer.parseInt(textfieldNumberOfTanks.getText());
                 if (numberOfTanks <= 10 && numberOfTanks > 0) {
@@ -127,7 +143,7 @@ public class StartScreen extends Application {
             }
 
         });
-        //after confirmation the play button appears, with play the main window appears
+        //after confirmation of how many tanks you want to place the play button appears, with play the main window appears
 
             buttonPlay.setOnMouseClicked((event) -> {
                 MainWindow screen = new MainWindow();
@@ -144,7 +160,7 @@ public class StartScreen extends Application {
 /*******************************************************************************/
 
 
-//TODO Create Combobox
+//TODO Create Combobox / FLAG for Single or Multiplayer mode
 
 
 /*******************************************************************************/
@@ -159,12 +175,5 @@ public class StartScreen extends Application {
 
         s.show();
     }
-
-//    public static void main(String args[]) {
-//        // launch the application
-//        launch(args);
-//
-//    }
-
 }
 

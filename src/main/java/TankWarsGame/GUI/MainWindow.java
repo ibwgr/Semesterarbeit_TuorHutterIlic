@@ -31,7 +31,7 @@ public class MainWindow extends Application {
 
     // check if all the tanks have been placed
     private IntegerProperty numberOfPlacedTanks = new SimpleIntegerProperty(0);
-    private IntegerProperty finalTanksToPlace = new SimpleIntegerProperty(numberOfTanksToPlace);
+//    private IntegerProperty finalTanksToPlace = new SimpleIntegerProperty(numberOfTanksToPlace);
     private BooleanProperty tanksPlaced = new SimpleBooleanProperty();
 
     // main window
