@@ -6,6 +6,7 @@ import TankWarsGame.Field.FieldOccupiedException;
 import TankWarsGame.Player.Attack;
 import TankWarsGame.Player.OutOfBoundsException;
 import TankWarsGame.Player.OwnPlayer;
+import TankWarsGame.Player.VirtualOpponent;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -19,6 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class MainWindow extends Application {
 
@@ -28,6 +31,9 @@ public class MainWindow extends Application {
     private boolean gameFinished;
     private static int numberOfTanksToPlace;
     private boolean startupDone = false;
+    final int fieldcount = 10; // TODO Rade - Replace 10 with Fx-variable for field size
+    AtomicInteger counter1 = new AtomicInteger(0);
+    AtomicInteger counter2 = new AtomicInteger(0);
 
     // check if all the tanks have been placed
     private IntegerProperty numberOfPlacedTanks = new SimpleIntegerProperty(0);
@@ -36,6 +42,7 @@ public class MainWindow extends Application {
 
     // main window
     Stage window;
+
     // scenes
     Scene scene;
 
@@ -65,13 +72,13 @@ public class MainWindow extends Application {
 
 
     //set field size and create fields
-    Field ownMatchfield = new Field(2,2);
-    Field opponentMatchfield = new Field(2,2);
+    Field ownMatchfield = new Field(fieldcount,fieldcount);
+    Field opponentMatchfield = new Field(fieldcount,fieldcount);
 
 
     //create player
     OwnPlayer ownPlayer = new OwnPlayer("philipp",ownMatchfield );
-
+    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield);
 
     /*******************************************************************************/
     // create own cells
@@ -96,34 +103,63 @@ public class MainWindow extends Application {
     /*******************************************************************************/
     // create opponent cells
     /*******************************************************************************/
-    private Cell createOpponentCell(int horizontal, int vertical){
+    private Cell createOpponentCell(int horizontal, int vertical) {
+        //AtomicInteger counter1 = new AtomicInteger(0);
+        //AtomicInteger counter2 = new AtomicInteger(0);
+
         Cell cell = new Cell();
         cell.setOnMouseClicked(event -> {
             if (cell.getFill() != Color.BLACK && cell.getFill() != Color.RED) {
                 Attack attack = new Attack(horizontal, vertical);
                 try {
-                    // TODO --> attack opponent field and not own field
-                    attack = ownPlayer.attackField(attack);
+                    // TODO --> attack opponent field and not own field - Done Hutti
+                    attack = bot.attackField(attack);
                 } catch (OutOfBoundsException oob) {
                 }
 
                 // TODO only for test reasons --> delete if not needed anymore
-                System.out.println("H:" + horizontal + " V:" + vertical + " " + attack.getAttackStatus() );
+                System.out.println("You have fired: H:" + horizontal + " V:" + vertical + " " + attack.getAttackStatus() );
                 // TODO <-- END of deletable stuff
-
 
                 switch (attack.getAttackStatus()) {
                     case SUCCESSFUL:
-                        cell.setFill(Color.RED);
+                        cell.setFill(Color.BLUE);
+                        counter1.getAndIncrement();
                         break;
                     case UNSUCCESSFUL:
                         cell.setFill(Color.BLACK);
                 }
+
+                //Random Attack VirtualOpponent
+                int[]virtualAttack = bot.placeRandom(fieldcount);
+                Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+                try {
+                    attackBot = ownPlayer.attackField(attackBot);
+                } catch (OutOfBoundsException oob) {
+                }
+
+                switch (attackBot.getAttackStatus()) {
+                    case SUCCESSFUL:
+                        //cell.setFill(Color.BLUE); TODO color display for attacks of virtual opponent
+                        counter2.getAndIncrement();
+                        break;
+                    case UNSUCCESSFUL:
+                        //cell.setFill(Color.BLACK);
+                }
+                // TODO only for test reasons --> delete if not needed anymore
+                System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus() );
+                // TODO <-- END of deletable stuff
+            }
+            System.out.println("Player: " + counter1.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + counter2.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
+            if (counter1.intValue() == StartScreen.numberOfTanks){
+                System.out.println("You win");
+            }
+            else if (counter2.intValue() == StartScreen.numberOfTanks){
+                System.out.println("You loose");
             }
         });
         return cell;
     }
-
 
     /*******************************************************************************/
     // create scene
@@ -152,7 +188,15 @@ public class MainWindow extends Application {
             ownField.getRowConstraints().addAll(A, B);
 
             // create cells
-            Cell cellA1 = createOwnCell(0,0);
+            for (int yColumn = 0; yColumn<fieldcount; yColumn++){
+                for (int xRow = 0; xRow<fieldcount; xRow++) {
+                    Cell cells = createOwnCell(yColumn, xRow);
+                    ownField.add(cells, yColumn, xRow);
+                }
+            }
+
+                // create cells
+            /*Cell cellA1 = createOwnCell(0,0);
             Cell cellA2 = createOwnCell(1,0);
             Cell cellB1 = createOwnCell(0,1);
             Cell cellB2 = createOwnCell(1,1);
@@ -161,7 +205,7 @@ public class MainWindow extends Application {
             ownField.add(cellB1, 0,1);
             ownField.add(cellB2, 1,1);
 
-            ownField.setGridLinesVisible(true);
+            */ownField.setGridLinesVisible(true);
 
             // check iff all tanks have been placed
             //!!!!!! StartScreen.numberOfTanks ursprünglich finalTanksToPlace
@@ -214,16 +258,17 @@ public class MainWindow extends Application {
          * */
         if ( startupDone ) {
 
-            // TODO --> create virtual opponent
+            // TODO --> create virtual opponent - Hutti: Done but at the beginning
 
             information.setText("start attacking your opponent");
 
-            // TODO create column, row and cell in a for loop
+            // TODO create column, row and cell in a for loop - Hutti Done for cells, why for columns and rows?
             // create columns
             ColumnConstraints column1 = new ColumnConstraints();
             column1.setPrefWidth(50);
             ColumnConstraints column2 = new ColumnConstraints();
             column2.setPrefWidth(50);
+
             opponentField.getColumnConstraints().addAll(column1, column2);
 
             // create rows
@@ -234,7 +279,14 @@ public class MainWindow extends Application {
             opponentField.getRowConstraints().addAll(A, B);
 
             // create cells
-            Cell OpponentCellA1 = createOpponentCell(0,0);
+            for (int yColumn = 0; yColumn < fieldcount; yColumn++){
+                for (int xRow = 0; xRow < fieldcount; xRow++) {
+                    Cell cellsOpponent = createOpponentCell(yColumn, xRow);
+                    opponentField.add(cellsOpponent, yColumn, xRow);
+                }
+            }
+
+            /*Cell OpponentCellA1 = createOpponentCell(0,0);
             Cell OpponentcellA2 = createOpponentCell(1,0);
             Cell OpponentcellB1 = createOpponentCell(0,1);
             Cell OpponentcellB2 = createOpponentCell(1,1);
@@ -242,6 +294,22 @@ public class MainWindow extends Application {
             opponentField.add(OpponentcellA2, 1, 0);
             opponentField.add(OpponentcellB1, 0, 1);
             opponentField.add(OpponentcellB2, 1, 1);
+            */
+
+            //Place tanks randomly on opponent field
+            for (int i = 0; i < StartScreen.numberOfTanks; i++) {
+                int[] positionTanks = bot.placeRandom(fieldcount);
+                try {
+                    bot.field.placeTank(positionTanks[0], positionTanks[1]);
+                } catch (FieldOccupiedException fo) {
+                }
+                // TODO only for test reasons, delete after
+                //Cell cellsRandoms = createOpponentCell(positionTanks[0], positionTanks[1]);
+                //opponentField.add(cellsRandoms, positionTanks[0], positionTanks[1]);
+                //cellsRandoms.setFill(Color.RED);
+                //cellsRandoms.setStroke(Color.ORANGE);
+                // TODO end of deletable test code
+            }
 
             opponentField.setGridLinesVisible(true);
 
@@ -257,8 +325,6 @@ public class MainWindow extends Application {
 
         }
 
-
-
         /*******************************************************************************/
         // main view - insert all regions
         /*******************************************************************************/
@@ -267,7 +333,7 @@ public class MainWindow extends Application {
         mainView.setCenter(centreRegion);
 
 
-        scene = new Scene(mainView, 500, 300);
+        scene = new Scene(mainView, 1200, 800);
         return scene;
     }
 

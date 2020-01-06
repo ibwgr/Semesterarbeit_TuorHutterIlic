@@ -26,11 +26,7 @@ public class Attack {
         return verticalPosition;
     }
 
-    public AttackStatus getAttackStatus() {
-        return attackStatus;
-    }
+    public AttackStatus getAttackStatus() { return attackStatus; }
 
-    public void setAttackStatus(AttackStatus attackStatus) {
-        this.attackStatus = attackStatus;
-    }
+    public void setAttackStatus(AttackStatus attackStatus) { this.attackStatus = attackStatus; }
 }

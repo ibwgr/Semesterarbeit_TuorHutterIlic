@@ -2,6 +2,8 @@ package TankWarsGame.Player;
 
 import TankWarsGame.Field.Field;
 
+import java.util.Random;
+
 public class VirtualOpponent extends Player {
     private Attack attack;
 
@@ -11,16 +13,15 @@ public class VirtualOpponent extends Player {
      * @param name
      * @param field*/
     public VirtualOpponent(String name, Field field) {
-        // TODO place tanks randomly on field while creating new opponent
+        // TODO place tanks randomly on field while creating new opponent - Hutti: Method below placeRandom
         super(name, field);
     }
-
 
     /*********************************
      * override abstract methods
      */
     public Attack getAttack() {
-        // TODO implement logic to create random attacks
+        // TODO implement logic to create random attacks - Hutti: same Method as for place tanks randomly
         return null;
     }
 
@@ -30,8 +31,22 @@ public class VirtualOpponent extends Player {
         this.checkIfInBounds(attack.getHorizontalPosition(), attack.getVerticalPosition());
 
 
-        // TODO attack opponent field
-        return attack;
+        // TODO attack opponent field - Hutti: Done
+        return super.field.attackField(attack);
+        //return attack;
+
+    }
+
+    public int [] placeRandom(int fieldcount){
+        Random random = new Random();
+        int randomHorizontal;
+        int randomVertical;
+
+        randomHorizontal = random.nextInt(fieldcount);
+        randomVertical = random.nextInt(fieldcount);
+        int [] a = {randomHorizontal, randomVertical};
+
+        return a;
 
     }
 }
