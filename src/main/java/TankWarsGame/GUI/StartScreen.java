@@ -34,11 +34,12 @@ public class StartScreen extends Application {
         // create TitleLabel "Tankwars" with White color
         Label startGameScreenTitle = new Label("Tank Wars");
         startGameScreenTitle.setFont(Font.font("Monospaced",50));
-        startGameScreenTitle.setTextFill(Color.web("#000000"));
+        startGameScreenTitle.setTextFill(Color.web("#FFF"));
 
         // create Labels
-        Label labelInstruction = new Label("Please write the number of tanks to Play with ");
-        labelInstruction.setPrefSize(150,200);
+        Label labelInstruction = new Label("The maximum size for the field is 20.  The minimum is 5. /n ");
+        labelInstruction.setPrefSize(300,100);
+        labelInstruction.setStyle("-fx-border-color:deepskyblue; -fx-background-color: gray;");
 
         // create buttons
         Button buttonPlay = new Button("Play!");
@@ -71,30 +72,34 @@ public class StartScreen extends Application {
         // Setup for Gridpane
         startGameGrid.setPrefSize(1200, 700);
         startGameGrid.setVgap(20);
+        startGameGrid.setHgap(20);
 
         // add to Gridpane in the Center of the startgamePane
-        startGameGrid.getChildren().addAll(startGameScreenTitle, comboBoxGameSetting, buttonCancel, textfieldNumberOfTanks, buttonNumber, labelInstruction);
+        startGameGrid.getChildren().addAll(startGameScreenTitle, comboBoxGameSetting, buttonCancel, textfieldNumberOfTanks, buttonNumber, labelInstruction, buttonPlay);
+
+        //make button invisible until the numbers(tanks and fieldsize) for the game are confirmed
+        buttonPlay.setVisible(false);
 
         //Die Objekte auf dem Gridpane verteilen
-        GridPane.setConstraints(startGameScreenTitle, 0, 0);
+        GridPane.setConstraints(startGameScreenTitle, 12, 0);
         GridPane.setHalignment(startGameScreenTitle, HPos.CENTER);
 
-        GridPane.setConstraints(buttonPlay, 0,1);
+        GridPane.setConstraints(buttonPlay, 0,12);
         GridPane.setHalignment(buttonPlay, HPos.CENTER);
-        //TODO not this label. this label already stads in the textbox
-        GridPane.setConstraints(labelInstruction, 0,2);
+        //TODO not this label. this label already stands in the textbox
+        GridPane.setConstraints(labelInstruction, 12,2);
         GridPane.setHalignment(labelInstruction, HPos.CENTER);
 
-        GridPane.setConstraints(buttonNumber, 0,5);
+        GridPane.setConstraints(buttonNumber, 12,5);
         GridPane.setHalignment(buttonNumber, HPos.CENTER);
 
-        GridPane.setConstraints(comboBoxGameSetting, 0,3);
+        GridPane.setConstraints(comboBoxGameSetting, 12,3);
         GridPane.setHalignment(comboBoxGameSetting, HPos.CENTER);
 
-        GridPane.setConstraints(textfieldNumberOfTanks, 0,4);
+        GridPane.setConstraints(textfieldNumberOfTanks, 12,4);
         GridPane.setHalignment(textfieldNumberOfTanks, HPos.CENTER);
 
-        GridPane.setConstraints(buttonCancel, 0, 13);
+        GridPane.setConstraints(buttonCancel, 24, 12);
         GridPane.setHalignment(buttonCancel, HPos.CENTER);
 
 /*******************************************************************************/
@@ -104,12 +109,12 @@ public class StartScreen extends Application {
         // set Font to Monospaced
         startGameGrid.setStyle("-fx-font-family: Monospaced");
 
-        startGameScreenTitle.setStyle("-fx-text-fill: #FFF");
+        startGameScreenTitle.setStyle("-fx-text-fill: #000");
         //set background color
-        startGameGrid.setStyle("-fx-background-color: #000;");
+        startGameGrid.setStyle("-fx-background-color: #FFF;");
 
         //Set gridpane lines true or false (debug)
-        startGameGrid.setGridLinesVisible(true);
+        startGameGrid.setGridLinesVisible(false);
 
 /*******************************************************************************/
 // Creating Buttonevents (ButtonPlay, Confirm Fieldsize, Cancel)
@@ -122,7 +127,7 @@ public class StartScreen extends Application {
             label: try {
                 numberOfTanks = Integer.parseInt(textfieldNumberOfTanks.getText());
                 if (numberOfTanks <= 10 && numberOfTanks > 0) {
-                    startGameGrid.getChildren().add(buttonPlay);
+                    buttonPlay.setVisible(true);
                     //Set Change fieldsize to invisible. Only way to change fieldsize ReOpen Game
                     //TODO ADD LABEL that you have to reopen game for changing the fieldsize --rade
                     textfieldNumberOfTanks.setVisible(false);
