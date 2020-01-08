@@ -1,1 +1,4 @@
-/out/**/*.class
+*.class
+/out/
+/target/
+/target/**/*.class
