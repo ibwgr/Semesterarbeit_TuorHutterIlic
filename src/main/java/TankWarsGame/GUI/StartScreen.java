@@ -35,10 +35,11 @@ public class StartScreen extends Application {
         // set title for the stage
         s.setTitle("Tank Wars");
 
-        // create TitleLabel "Tankwars" with White color
+        // create TitleLabel "Tankwars"
         Label startGameScreenTitle = new Label("Tank Wars");
         startGameScreenTitle.setFont(Font.font("Monospaced",50));
-        startGameScreenTitle.setTextFill(Color.web("#FFF"));
+        startGameScreenTitle.setStyle("-fx-font-family: Monospaced");
+        startGameScreenTitle.setStyle("-fx-text-fill: #FFF");
 
         // create Labels
         Label labelInstruction = new Label("Here is a small instruction for our TANK WARS. You can choose a number between 1 and 10 to set the number of tanks to place." +
@@ -95,13 +96,9 @@ public class StartScreen extends Application {
         startGameGrid.setPrefSize(1200, 700);
         startGameGrid.setVgap(20);
         startGameGrid.setHgap(20);
-        // set Font to Monospaced
-        startGameGrid.setStyle("-fx-font-family: Monospaced");
-        startGameScreenTitle.setStyle("-fx-text-fill: #000");
-        //set background color
-        startGameGrid.setStyle("-fx-background-color: #FFF;");
+
         //set Background image READY FOR WAR
-        //TODO geht noch nicht. da zuerst die variablen number of tanks gesucht werden. nach dem eintragen würde es gehên. oder von main aus ausführen als erstes..
+        //TODO ok?
         BackgroundImage startScreenTank = new BackgroundImage(new Image("https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg" ,1200,700,false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         //set image on gridpane
@@ -141,7 +138,7 @@ public class StartScreen extends Application {
         GridPane.setHalignment(buttonCancel, HPos.CENTER);
 
 /*******************************************************************************/
-// set colors and style
+// DEBUG
 /*******************************************************************************/
 
         //Set gridpane lines true or false (debug)
@@ -190,9 +187,7 @@ public class StartScreen extends Application {
                     labelInstruction.setText("HELP: Must be a number! Number of tanks has to be between 1-10. Size of the square side has to be between 5 and 10.");
                 }
             } catch (IllegalArgumentException e) {
-                    // TODO DEFINE OUTPUTLABEL --rade
-                System.out.println("Maybe you wrote a letter instead of a number");
-                labelInstruction.setText("Must be a number!");
+                labelInstruction.setText("HELP: Must be a number! Number of tanks has to be between 1-10. Size of the square side has to be between 5 and 10.");
                 break label;
             }
 
