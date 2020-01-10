@@ -37,14 +37,12 @@ public class StartScreen extends Application {
 
         // create TitleLabel "Tankwars"
         Label startGameScreenTitle = new Label("Tank Wars");
-        startGameScreenTitle.setFont(Font.font("Monospaced",50));
-        startGameScreenTitle.setStyle("-fx-font-family: Monospaced");
-        startGameScreenTitle.setStyle("-fx-text-fill: #FFF");
+        startGameScreenTitle.setStyle("-fx-font-size: 50; -fx-text-fill: #FFF; -fx-font-family: Monospaced");
 
         // create Labels
         Label labelInstruction = new Label("Here is a small instruction for our TANK WARS. You can choose a number between 1 and 10 to set the number of tanks to place." +
                 "There is also a textbox to set the side of the square field where you place your tanks. The minimum number of cells for the side of the square is 5 (25 Cells) and maximum is 10 (100 Cells). ");
-        labelInstruction.setPrefSize(500,100);
+        labelInstruction.setPrefSize(500,150);
         labelInstruction.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
         labelInstruction.setWrapText(true);
 
@@ -62,19 +60,23 @@ public class StartScreen extends Application {
 
         // create Combobox
         ComboBox comboBoxGameSetting = new ComboBox();
-        comboBoxGameSetting.setPrefSize(150, 40);
+        comboBoxGameSetting.setPrefSize(500, 40);
 
         // create Textfield number of tanks input
         TextField textfieldNumberOfTanks = new TextField();
-        textfieldNumberOfTanks.setPrefSize(150, 40);
-        //set pre Text in Textfield
+        textfieldNumberOfTanks.setPrefSize(500, 40);
+        //set pre Text in Textfield and style
         textfieldNumberOfTanks.setPromptText("With how many Tanks? 1-10");
+        textfieldNumberOfTanks.setAlignment(Pos.CENTER);
+        textfieldNumberOfTanks.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
 
         //create textfield fieldSize input
         TextField textfieldSquareSide = new TextField();
-        textfieldSquareSide.setPrefSize(150, 40);
-        //set pre Text in Textfield
+        textfieldSquareSide.setPrefSize(500, 40);
+        //set pre Text in Textfield and style
         textfieldSquareSide.setPromptText("Set the side of the field (Square): 5-10");
+        textfieldSquareSide.setAlignment(Pos.CENTER);
+        textfieldSquareSide.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
 
         //create image //TODO NOT ACTIVE
         Image imageTank = new Image("https://img.favpng.com/17/12/5/pixel-art-minecraft-tank-png-favpng-iNcdJV2Zszcm0sKjSzSY8VjX4.jpg");
@@ -112,7 +114,7 @@ public class StartScreen extends Application {
         GridPane.setConstraints(startGameScreenTitle, 8, 0);
         GridPane.setHalignment(startGameScreenTitle, HPos.CENTER);
 
-        GridPane.setConstraints(buttonPlay, 0,12);
+        GridPane.setConstraints(buttonPlay, 0,10);
         GridPane.setHalignment(buttonPlay, HPos.CENTER);
 
         GridPane.setConstraints(labelInstruction, 8,2);
@@ -134,7 +136,7 @@ public class StartScreen extends Application {
 //        GridPane.setConstraints(imageViewTank, 8,8);
 //        GridPane.setHalignment(imageViewTank, HPos.CENTER);
 
-        GridPane.setConstraints(buttonCancel, 16, 12);
+        GridPane.setConstraints(buttonCancel, 16, 10);
         GridPane.setHalignment(buttonCancel, HPos.CENTER);
 
 /*******************************************************************************/
