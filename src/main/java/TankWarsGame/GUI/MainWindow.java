@@ -51,6 +51,7 @@ public class MainWindow extends Application {
 
     // centre region
     HBox centreRegion = new HBox();
+    HBox bottomRegion = new HBox();
     VBox rightCentreRegion = new VBox();
     VBox leftCentreRegion = new VBox();
 
@@ -250,6 +251,15 @@ public class MainWindow extends Application {
             centreRegion.setStyle("-fx-background-color: white;");
             centreRegion.getChildren().addAll(leftCentreRegion, rightCentreRegion); /* add grid pane fields to centre region */
 
+            /*********************************
+             * BOTTOM reagion *
+             * */
+            Text forRadeIllic = new Text("Hallo Rade, du findest diesen Abschnitt im MainWindow -> Bottom region!!");
+            bottomRegion.setPadding((new Insets (15,12,15,12)));
+            bottomRegion.setSpacing(10);
+            bottomRegion.setStyle("-fx-background-color: white;");
+            bottomRegion.getChildren().addAll(forRadeIllic); /* add grid pane fields to centre region */
+
         }
 
 
@@ -331,7 +341,7 @@ public class MainWindow extends Application {
         BorderPane mainView = new BorderPane();
         mainView.setTop(topRegion);
         mainView.setCenter(centreRegion);
-
+        mainView.setBottom(bottomRegion);
 
         scene = new Scene(mainView, 1200, 800);
         return scene;
