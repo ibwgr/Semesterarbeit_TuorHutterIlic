@@ -13,10 +13,12 @@ import static org.mockito.Mockito.times;
 
 class OwnPlayerTest {
 
-    @Test
-    void attackField() {
-        //TODO Test attackField method
-    }
+    /*********************************
+     * attackField
+     *
+     * not needed to bo tested at this point. This method uses only other methods, and those methods will be tested separately
+     **/
+
 
     /*********************************
      * checkIfInBounds
@@ -111,6 +113,9 @@ class OwnPlayerTest {
             Assertions.assertEquals("attack is out of field boundaries", e.getMessage());
         }
     }
+
+
+
 
     /*********************************
      * getFieldStatus
