@@ -3,6 +3,7 @@ package TankWarsGame.GUI;
 import TankWarsGame.Field.Cell;
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
+import TankWarsGame.Field.FieldStatus;
 import TankWarsGame.Player.Attack;
 import TankWarsGame.Player.OutOfBoundsException;
 import TankWarsGame.Player.OwnPlayer;
@@ -12,7 +13,11 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -84,7 +89,7 @@ public class MainWindow extends Application {
     /*******************************************************************************/
     // create own cells
     /*******************************************************************************/
-    private Cell createOwnCell(int horizontal, int vertical){
+    private Cell createOwnCell(int horizontal, int vertical) {
         Cell cell = new Cell();
         cell.setOnMouseClicked(event -> {
             if (!startupDone && cell.getFill() != Color.GREEN) {
@@ -99,6 +104,7 @@ public class MainWindow extends Application {
         });
         return cell;
     }
+
 
 
     /*******************************************************************************/
@@ -134,10 +140,26 @@ public class MainWindow extends Application {
                 //Random Attack VirtualOpponent
                 int[]virtualAttack = bot.placeRandom(fieldcount);
                 Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+
                 try {
                     attackBot = ownPlayer.attackField(attackBot);
                 } catch (OutOfBoundsException oob) {
                 }
+
+                ObservableList<Node> childrens = ownField.getChildren();
+                for (Node node : childrens)
+                    if (ownField.getRowIndex(node) == virtualAttack[0] && ownField.getColumnIndex(node) == virtualAttack[1]) {
+                        Cell cell1 = new Cell();
+                        cell1 = (Cell)node;
+                        if ( cell1.getFill() == Color.GREEN ){
+                            cell1.setFill(Color.RED);
+                        }else {
+                            cell1.setFill(Color.BLACK);
+                        }
+
+                        break;
+                    }
+
 
                 switch (attackBot.getAttackStatus()) {
                     case SUCCESSFUL:
@@ -172,22 +194,6 @@ public class MainWindow extends Application {
          * */
         if (!startupDone) {
             information.setText("place your tanks");
-
-            // TODO create column, row and cell in a for loop
-            // create columns
-            ColumnConstraints column1 = new ColumnConstraints();
-            column1.setPrefWidth(50);
-            ColumnConstraints column2 = new ColumnConstraints();
-            column2.setPrefWidth(50);
-            ownField.getColumnConstraints().addAll(column1, column2);
-
-            // create rows
-            RowConstraints A = new RowConstraints();
-            A.setPrefHeight(50);
-            RowConstraints B = new RowConstraints();
-            B.setPrefHeight(50);
-            ownField.getRowConstraints().addAll(A, B);
-
             // create cells
             for (int yColumn = 0; yColumn<fieldcount; yColumn++){
                 for (int xRow = 0; xRow<fieldcount; xRow++) {
@@ -196,17 +202,7 @@ public class MainWindow extends Application {
                 }
             }
 
-                // create cells
-            /*Cell cellA1 = createOwnCell(0,0);
-            Cell cellA2 = createOwnCell(1,0);
-            Cell cellB1 = createOwnCell(0,1);
-            Cell cellB2 = createOwnCell(1,1);
-            ownField.add(cellA1, 0,0);
-            ownField.add(cellA2, 1,0);
-            ownField.add(cellB1, 0,1);
-            ownField.add(cellB2, 1,1);
-
-            */ownField.setGridLinesVisible(true);
+            ownField.setGridLinesVisible(true);
 
             // check iff all tanks have been placed
             //!!!!!! StartScreen.numberOfTanks ursprünglich finalTanksToPlace
@@ -272,21 +268,6 @@ public class MainWindow extends Application {
 
             information.setText("start attacking your opponent");
 
-            // TODO create column, row and cell in a for loop - Hutti Done for cells, why for columns and rows?
-            // create columns
-            ColumnConstraints column1 = new ColumnConstraints();
-            column1.setPrefWidth(50);
-            ColumnConstraints column2 = new ColumnConstraints();
-            column2.setPrefWidth(50);
-
-            opponentField.getColumnConstraints().addAll(column1, column2);
-
-            // create rows
-            RowConstraints A = new RowConstraints();
-            A.setPrefHeight(50);
-            RowConstraints B = new RowConstraints();
-            B.setPrefHeight(50);
-            opponentField.getRowConstraints().addAll(A, B);
 
             // create cells
             for (int yColumn = 0; yColumn < fieldcount; yColumn++){
@@ -295,16 +276,6 @@ public class MainWindow extends Application {
                     opponentField.add(cellsOpponent, yColumn, xRow);
                 }
             }
-
-            /*Cell OpponentCellA1 = createOpponentCell(0,0);
-            Cell OpponentcellA2 = createOpponentCell(1,0);
-            Cell OpponentcellB1 = createOpponentCell(0,1);
-            Cell OpponentcellB2 = createOpponentCell(1,1);
-            opponentField.add(OpponentCellA1, 0, 0);
-            opponentField.add(OpponentcellA2, 1, 0);
-            opponentField.add(OpponentcellB1, 0, 1);
-            opponentField.add(OpponentcellB2, 1, 1);
-            */
 
             //Place tanks randomly on opponent field
             for (int i = 0; i < StartScreen.numberOfTanks; i++) {
