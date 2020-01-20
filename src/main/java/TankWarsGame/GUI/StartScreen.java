@@ -110,7 +110,7 @@ public class StartScreen extends Application {
         // add to Gridpane in the Center of the startgamePane
         startGameGrid.getChildren().addAll(startGameScreenTitle, comboBoxGameSetting, buttonCancel, textfieldNumberOfTanks, buttonConfirm, labelInstruction, buttonPlay, textfieldSquareSide);
 
-        //Die Objekte auf dem Gridpane verteilen
+        //place the objects on the grid pane
         GridPane.setConstraints(startGameScreenTitle, 8, 0);
         GridPane.setHalignment(startGameScreenTitle, HPos.CENTER);
 

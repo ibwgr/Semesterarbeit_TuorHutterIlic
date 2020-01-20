@@ -16,9 +16,12 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -64,11 +67,10 @@ public class MainWindow extends Application {
     // own and opponent gridPane
     GridPane opponentField = new GridPane();
     GridPane ownField = new GridPane();
+    GridPane gridpaneTop = new GridPane();
+    GridPane gridpaneBottom = new GridPane();
 
-    // text fields
-    Text information = new Text("START");
-    Label labelOwnFiled = new Label("Eigenes Spielfeld");
-    Label labelOpponentFiled = new Label("Spielfeld des Gegners");
+
 
 
     // set number of tanks
@@ -193,7 +195,7 @@ public class MainWindow extends Application {
          * own field *
          * */
         if (!startupDone) {
-            information.setText("place your tanks");
+//            information.setText("place your tanks"); TODO neues Label @mega
             // create cells
             for (int yColumn = 0; yColumn<fieldcount; yColumn++){
                 for (int xRow = 0; xRow<fieldcount; xRow++) {
@@ -223,24 +225,14 @@ public class MainWindow extends Application {
                 window.setScene(createScene());
             });
 
-
-
-            /*********************************
-             * TOP region Layout *
-             * */
-            topRegion.setPadding((new Insets(15, 12, 15, 12)));
-            topRegion.setSpacing(10);
-            topRegion.setStyle("-fx-background-color: #a89d32;");
-            topRegion.getChildren().addAll(information);
-
-
             /*********************************
              * CENTRE reagion *
              * */
+            //Top Bottom and centre region have to be set inside the if (startup) to prevent from being called twice
             leftCentreRegion.setPadding((new Insets(12, 15, 12, 15)));
             leftCentreRegion.setSpacing(10);
             leftCentreRegion.setStyle("-fx-background-color: white;");
-            leftCentreRegion.getChildren().addAll(labelOwnFiled, ownField);   /* add grid pane fields to centre region */
+            leftCentreRegion.getChildren().addAll(ownField);   /* add grid pane fields to centre region */
 
             centreRegion.setPadding((new Insets(12, 15, 12, 15)));
             centreRegion.setSpacing(10);
@@ -248,16 +240,77 @@ public class MainWindow extends Application {
             centreRegion.getChildren().addAll(leftCentreRegion, rightCentreRegion); /* add grid pane fields to centre region */
 
             /*********************************
+             * TOP region Layout *
+             * */
+
+            Label labelTopOwnField = new Label(" Own Field ");
+            labelTopOwnField.setPrefSize(500,40);
+            labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+            labelTopOwnField.setWrapText(true);
+
+            Label labelTopEnemyField = new Label(" Enemy Field ");
+            labelTopEnemyField.setPrefSize(500,40);
+            labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+            labelTopEnemyField.setWrapText(true);
+
+            // Set gridpaneBottom
+            gridpaneTop.setPrefSize(400, 50);
+            gridpaneTop.setVgap(20);
+            gridpaneTop.setHgap(20);
+
+            // add children
+            gridpaneTop.getChildren().addAll(labelTopEnemyField, labelTopOwnField);
+
+            // place the objects on the grid pane
+            gridpaneTop.setConstraints(labelTopOwnField, 2, 0);
+            gridpaneTop.setHalignment(labelTopOwnField, HPos.CENTER);
+
+            gridpaneTop.setConstraints(labelTopEnemyField, 8, 0);
+            gridpaneTop.setHalignment(labelTopEnemyField, HPos.CENTER);
+
+            /*********************************
+             * TOP region DEBUG *
+             * */
+
+            //Set gridpane lines true or false (debug)
+            gridpaneTop.setGridLinesVisible(true);
+
+            /*********************************
              * BOTTOM reagion *
              * */
-            Text forRadeIllic = new Text("Hallo Rade, du findest diesen Abschnitt im MainWindow -> Bottom region!!");
-            bottomRegion.setPadding((new Insets (15,12,15,12)));
-            bottomRegion.setSpacing(10);
-            bottomRegion.setStyle("-fx-background-color: white;");
-            bottomRegion.getChildren().addAll(forRadeIllic); /* add grid pane fields to centre region */
+            // create label
+            Label labelBottomInfo = new Label("Introduction:" +
+                    "1. Set your tanks on the left field. " + "2. Now you can attack the enemy field.");
+            labelBottomInfo.setPrefSize(500,150);
+            labelBottomInfo.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+            labelBottomInfo.setWrapText(true);
 
+            // create Button
+            Button buttonCancelMain = new Button("Cancel");
+            buttonCancelMain.setPrefSize(150,40);
+
+            // Set gridpaneBottom
+            gridpaneBottom.setPrefSize(100, 100);
+            gridpaneBottom.setVgap(20);
+            gridpaneBottom.setHgap(20);
+
+            // add children
+            gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain);
+
+            // place the objects on the grid pane
+            gridpaneBottom.setConstraints(labelBottomInfo, 0, 0);
+            gridpaneBottom.setHalignment(labelBottomInfo, HPos.CENTER);
+
+            gridpaneBottom.setConstraints(buttonCancelMain, 10, 0);
+            gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
         }
 
+        /*********************************
+         * Bottom region DEBUG *
+         * */
+
+        //Set gridpane lines true or false (debug)
+        gridpaneBottom.setGridLinesVisible(true);
 
         /*********************************
          * opponent field *
@@ -266,7 +319,7 @@ public class MainWindow extends Application {
 
             // TODO --> create virtual opponent - Hutti: Done but at the beginning
 
-            information.setText("start attacking your opponent");
+//            information.setText("start attacking your opponent"); TODO new label @rade
 
 
             // create cells
@@ -302,7 +355,7 @@ public class MainWindow extends Application {
             rightCentreRegion.setSpacing(10);
             rightCentreRegion.setStyle("-fx-background-color: white;");
 
-            rightCentreRegion.getChildren().addAll(labelOpponentFiled, opponentField);
+            rightCentreRegion.getChildren().addAll(opponentField);
 
         }
 
@@ -310,9 +363,10 @@ public class MainWindow extends Application {
         // main view - insert all regions
         /*******************************************************************************/
         BorderPane mainView = new BorderPane();
-        mainView.setTop(topRegion);
+        //region setting
         mainView.setCenter(centreRegion);
-        mainView.setBottom(bottomRegion);
+        mainView.setTop(gridpaneTop);
+        mainView.setBottom(gridpaneBottom);
 
         scene = new Scene(mainView, 1200, 800);
         return scene;
