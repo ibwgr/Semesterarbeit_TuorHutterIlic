@@ -25,7 +25,8 @@ public abstract class Player {
      * methods
      **/
     public void checkIfInBounds(int horizontal, int vertical) throws OutOfBoundsException {
-        if ((horizontal < field.getHorizontalSize()) && vertical < field.getVerticalSize()){
+        if (    ( horizontal < field.getHorizontalSize() && vertical < field.getVerticalSize() )
+            &&  ( horizontal >= 0 && vertical >= 0 )){
             //position is inside of the boundaries --> nothing to do
         } else{
             OutOfBoundsException outOfBoundsException = new OutOfBoundsException();
