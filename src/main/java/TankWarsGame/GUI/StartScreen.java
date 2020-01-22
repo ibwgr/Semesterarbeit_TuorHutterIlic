@@ -101,10 +101,10 @@ public class StartScreen extends Application {
 
         //set Background image READY FOR WAR
         //TODO ok?
-        BackgroundImage startScreenTank = new BackgroundImage(new Image("https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg" ,1200,700,false,true),
+        BackgroundImage backgroundStart = new BackgroundImage(new Image("https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg" ,1200,700,false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         //set image on gridpane
-       startGameGrid.setBackground(new Background(startScreenTank));
+       startGameGrid.setBackground(new Background(backgroundStart));
 
 
         // add to Gridpane in the Center of the startgamePane

@@ -19,10 +19,13 @@ import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -54,24 +57,16 @@ public class MainWindow extends Application {
     // scenes
     Scene scene;
 
-    // top reagion
-    HBox topRegion = new HBox();
-
     // centre region
     HBox centreRegion = new HBox();
-    HBox bottomRegion = new HBox();
     VBox rightCentreRegion = new VBox();
     VBox leftCentreRegion = new VBox();
-
 
     // own and opponent gridPane
     GridPane opponentField = new GridPane();
     GridPane ownField = new GridPane();
     GridPane gridpaneTop = new GridPane();
     GridPane gridpaneBottom = new GridPane();
-
-
-
 
     // set number of tanks
     public static void setNumberOfTanksToPlace(int numberOfTanksToPlace){
@@ -231,18 +226,19 @@ public class MainWindow extends Application {
             //Top Bottom and centre region have to be set inside the if (startup) to prevent from being called twice
             leftCentreRegion.setPadding((new Insets(12, 15, 12, 15)));
             leftCentreRegion.setSpacing(10);
-            leftCentreRegion.setStyle("-fx-background-color: white;");
+//            leftCentreRegion.setStyle("-fx-background-color: white;");
             leftCentreRegion.getChildren().addAll(ownField);   /* add grid pane fields to centre region */
 
+            //set center region
             centreRegion.setPadding((new Insets(12, 15, 12, 15)));
             centreRegion.setSpacing(10);
-            centreRegion.setStyle("-fx-background-color: white;");
+//            centreRegion.setStyle("-fx-background-color: white;");
             centreRegion.getChildren().addAll(leftCentreRegion, rightCentreRegion); /* add grid pane fields to centre region */
 
             /*********************************
              * TOP region Layout *
              * */
-
+            // create label
             Label labelTopOwnField = new Label(" Own Field ");
             labelTopOwnField.setPrefSize(500,40);
             labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
@@ -253,7 +249,8 @@ public class MainWindow extends Application {
             labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
             labelTopEnemyField.setWrapText(true);
 
-            // Set gridpaneBottom
+            // Set gridpaneTop
+            gridpaneTop.setAlignment(Pos.CENTER);
             gridpaneTop.setPrefSize(400, 50);
             gridpaneTop.setVgap(20);
             gridpaneTop.setHgap(20);
@@ -262,7 +259,7 @@ public class MainWindow extends Application {
             gridpaneTop.getChildren().addAll(labelTopEnemyField, labelTopOwnField);
 
             // place the objects on the grid pane
-            gridpaneTop.setConstraints(labelTopOwnField, 2, 0);
+            gridpaneTop.setConstraints(labelTopOwnField, 0, 0);
             gridpaneTop.setHalignment(labelTopOwnField, HPos.CENTER);
 
             gridpaneTop.setConstraints(labelTopEnemyField, 8, 0);
@@ -273,7 +270,7 @@ public class MainWindow extends Application {
              * */
 
             //Set gridpane lines true or false (debug)
-            gridpaneTop.setGridLinesVisible(true);
+            gridpaneTop.setGridLinesVisible(false);
 
             /*********************************
              * BOTTOM reagion *
@@ -281,28 +278,54 @@ public class MainWindow extends Application {
             // create label
             Label labelBottomInfo = new Label("Introduction:" +
                     "1. Set your tanks on the left field. " + "2. Now you can attack the enemy field.");
-            labelBottomInfo.setPrefSize(500,150);
+            labelBottomInfo.setPrefSize(500,120);
             labelBottomInfo.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
             labelBottomInfo.setWrapText(true);
 
             // create Button
             Button buttonCancelMain = new Button("Cancel");
             buttonCancelMain.setPrefSize(150,40);
+            // invisible Button
+            Button buttonInvisible = new Button("");
+            buttonInvisible.setPrefSize(150,40);
+            buttonInvisible.setVisible(false);
+
+            // create textfield
+            TextField textfieldHitCounterOwn = new TextField();
+            textfieldHitCounterOwn.setPrefSize(150, 40);
+            //set pre Text in Textfield and style
+            textfieldHitCounterOwn.setPromptText("Your tanks destroyed");
+            textfieldHitCounterOwn.setAlignment(Pos.CENTER);
+            textfieldHitCounterOwn.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
+
+            TextField textfieldHitCounterEnemy = new TextField();
+            textfieldHitCounterEnemy.setPrefSize(150, 40);
+            //set pre Text in Textfield and style
+            textfieldHitCounterEnemy.setPromptText("Enemy tanks destroyed");
+            textfieldHitCounterEnemy.setAlignment(Pos.CENTER);
+            textfieldHitCounterEnemy.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
 
             // Set gridpaneBottom
-            gridpaneBottom.setPrefSize(100, 100);
-            gridpaneBottom.setVgap(20);
+            gridpaneBottom.setAlignment(Pos.CENTER);
+            gridpaneBottom.setPrefSize(100, 200);
+//            gridpaneBottom.setVgap(20);
             gridpaneBottom.setHgap(20);
 
             // add children
-            gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain);
+            gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, textfieldHitCounterEnemy, textfieldHitCounterOwn);
 
             // place the objects on the grid pane
-            gridpaneBottom.setConstraints(labelBottomInfo, 0, 0);
+            gridpaneBottom.setConstraints(labelBottomInfo, 9, 0);
             gridpaneBottom.setHalignment(labelBottomInfo, HPos.CENTER);
 
-            gridpaneBottom.setConstraints(buttonCancelMain, 10, 0);
+            gridpaneBottom.setConstraints(buttonCancelMain, 17, 1);
             gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
+
+            gridpaneBottom.setConstraints(textfieldHitCounterOwn, 0, 0);
+            gridpaneBottom.setValignment(textfieldHitCounterOwn, VPos.TOP);
+
+            gridpaneBottom.setConstraints(textfieldHitCounterEnemy, 17, 0);
+            gridpaneBottom.setValignment(textfieldHitCounterEnemy, VPos.TOP);
         }
 
         /*********************************
@@ -310,7 +333,7 @@ public class MainWindow extends Application {
          * */
 
         //Set gridpane lines true or false (debug)
-        gridpaneBottom.setGridLinesVisible(true);
+        gridpaneBottom.setGridLinesVisible(false);
 
         /*********************************
          * opponent field *
@@ -351,10 +374,9 @@ public class MainWindow extends Application {
             /*********************************
              * right CENTRE reagion *
              * */
-            rightCentreRegion.setPadding((new Insets(12, 15, 12, 15)));
+            rightCentreRegion.setPadding((new Insets(12, 15, 12, 95)));
             rightCentreRegion.setSpacing(10);
-            rightCentreRegion.setStyle("-fx-background-color: white;");
-
+//            rightCentreRegion.setStyle("-fx-background-color: white;");
             rightCentreRegion.getChildren().addAll(opponentField);
 
         }
@@ -363,10 +385,17 @@ public class MainWindow extends Application {
         // main view - insert all regions
         /*******************************************************************************/
         BorderPane mainView = new BorderPane();
+        //set Background
+        mainView.setStyle("-fx-background-image: url(https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg); " +
+                "-fx-background-position: center center; " +
+                "-fx-background-repeat: stretch;");
+        //TODO Doesn't work yet and buttons/textfields function @rade
+
         //region setting
         mainView.setCenter(centreRegion);
         mainView.setTop(gridpaneTop);
         mainView.setBottom(gridpaneBottom);
+        mainView.getBottom().prefHeight(250);
 
         scene = new Scene(mainView, 1200, 800);
         return scene;
