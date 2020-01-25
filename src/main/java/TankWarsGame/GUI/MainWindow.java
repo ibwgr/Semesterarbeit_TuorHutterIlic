@@ -3,7 +3,8 @@ package TankWarsGame.GUI;
 import TankWarsGame.Field.Cell;
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
-import TankWarsGame.Field.FieldStatus;
+import TankWarsGame.GameLogic.GameLogic;
+import TankWarsGame.GameLogic.GameSequencer;
 import TankWarsGame.Player.Attack;
 import TankWarsGame.Player.OutOfBoundsException;
 import TankWarsGame.Player.OwnPlayer;
@@ -13,8 +14,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -25,7 +24,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -38,11 +36,16 @@ public class MainWindow extends Application {
     /*******************************************************************************/
     // general properties
     /*******************************************************************************/
+
+    private static int numberOfTanksToPlace;                                    // number of tanks to place
+    private static AtomicInteger ownGameScore = new AtomicInteger(0);
+    private static AtomicInteger opponentGameScore = new AtomicInteger(0);
+    public static String opponentHostAddress;                                   //server address
+    public static int port;                                                     // Port-number
+
+
     private boolean startupDone = false;
     final int fieldcount = 10; // TODO Rade - Replace 10 with Fx-variable for field size
-    AtomicInteger counter1 = new AtomicInteger(0);
-    AtomicInteger counter2 = new AtomicInteger(0);
-
 
     // BooleanProperty to check if all the tanks have been placed
     private IntegerProperty numberOfPlacedTanks = new SimpleIntegerProperty(0);
@@ -66,14 +69,21 @@ public class MainWindow extends Application {
     public static final void setOpponentTurn(boolean value){opponentPlayerTurn.set(value);}
 
 
-    private static int numberOfTanksToPlace;
+
+    /*******************************************************************************/
+    // general properties getter and setter methods
+    /*******************************************************************************/
+    public static AtomicInteger getOwnScore(){
+        return ownGameScore;
+    }
+    public static AtomicInteger getOpponentScore(){
+        return opponentGameScore;
+    }
 
     // set number of tanks
     public static void setNumberOfTanksToPlace(int numberOfTanksToPlace){
         MainWindow.numberOfTanksToPlace = numberOfTanksToPlace;
     }
-
-
 
     /*******************************************************************************/
     // create own cells
@@ -93,7 +103,6 @@ public class MainWindow extends Application {
         });
         return cell;
     }
-
 
 
     /*******************************************************************************/
@@ -118,54 +127,15 @@ public class MainWindow extends Application {
                 switch (attack.getAttackStatus()) {
                     case SUCCESSFUL:
                         cell.setFill(Color.BLUE);
-                        counter1.getAndIncrement();
+                        ownGameScore.getAndIncrement();
                         break;
                     case UNSUCCESSFUL:
                         cell.setFill(Color.BLACK);
                 }
 
-                //Random Attack VirtualOpponent
-                int[]virtualAttack = bot.placeRandom(fieldcount);
-                Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
-
-                try {
-                    attackBot = ownPlayer.attackField(attackBot);
-                } catch (OutOfBoundsException oob) {
-                }
-
-                ObservableList<Node> childrens = ownField.getChildren();
-                for (Node node : childrens)
-                    if (ownField.getRowIndex(node) == virtualAttack[0] && ownField.getColumnIndex(node) == virtualAttack[1]) {
-                        Cell cell1 = new Cell();
-                        cell1 = (Cell)node;
-                        if ( cell1.getFill() == Color.GREEN ){
-                            cell1.setFill(Color.RED);
-                        }else {
-                            cell1.setFill(Color.BLACK);
-                        }
-
-                        break;
-                    }
-
-
-                switch (attackBot.getAttackStatus()) {
-                    case SUCCESSFUL:
-                        counter2.getAndIncrement();
-                        break;
-                    case UNSUCCESSFUL:
-                        break;
-                }
-                // TODO only for test reasons --> delete if not needed anymore
-                System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus() );
-                // TODO <-- END of deletable stuff
             }
-            System.out.println("Player: " + counter1.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + counter2.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
-            if (counter1.intValue() == StartScreen.numberOfTanks){
-                System.out.println("You win");
-            }
-            else if (counter2.intValue() == StartScreen.numberOfTanks){
-                System.out.println("You loose");
-            }
+
+            GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
         });
         return cell;
     }
@@ -235,6 +205,68 @@ public class MainWindow extends Application {
         });
 
 
+
+        /*********************************
+         * opponent turn
+         * */
+        opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
+            if ( getOpponentPlayerTurn()){
+                    //Random Attack VirtualOpponent
+                    int[]virtualAttack = bot.placeRandom(fieldcount);
+                    Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+
+                    try {
+                        attackBot = ownPlayer.attackField(attackBot);
+                    } catch (OutOfBoundsException oob) {
+                    }
+
+                    ObservableList<Node> childrens = ownField.getChildren();
+                    for (Node node : childrens)
+                        if (ownField.getRowIndex(node) == virtualAttack[0] && ownField.getColumnIndex(node) == virtualAttack[1]) {
+                            Cell cell1 = new Cell();
+                            cell1 = (Cell)node;
+                            if ( cell1.getFill() == Color.GREEN ){
+                                cell1.setFill(Color.RED);
+                            }else {
+                                cell1.setFill(Color.BLACK);
+                            }
+
+                            break;
+                        }
+
+
+                    switch (attackBot.getAttackStatus()) {
+                        case SUCCESSFUL:
+                            opponentGameScore.getAndIncrement();
+                            break;
+                        case UNSUCCESSFUL:
+                            break;
+                    }
+                    // TODO only for test reasons --> delete if not needed anymore
+                    System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus() );
+                    // TODO <-- END of deletable stuff
+
+
+//                    // TODO  replace random Attack with this lines of coed -->  @ptuor
+//                    Attack attack = (opponentPlayer.getAttack());
+//                    ObservableList<Node> childrens = ownField.getChildren();
+//                    for (Node node : childrens) {
+//                        if ((ownField.getRowIndex(node) ==  attack.getVerticalPosition()) && (ownField.getColumnIndex(node) == attack.getHorizontalPosition())) {
+//                            Cell cell1;
+//                            cell1 = (Cell) node;
+//                            if (cell1.getFill() == Color.GREEN) {
+//                                cell1.setFill(Color.RED);
+//                            } else {
+//                                cell1.setFill(Color.BLACK);
+//                            }
+//                            break;
+//                        }
+//                    }
+                opponentPlayerTurn.set(false);
+                GameLogic.gameSequencer = GameSequencer.CHECK_IF_LOST_AFTER_OPPONENT_TURN;
+            }
+
+        });
 
 
         /*********************************
@@ -364,6 +396,12 @@ public class MainWindow extends Application {
         mainView.setTop(gridPaneTop);
         mainView.setBottom(gridpaneBottom);
         mainView.getBottom().prefHeight(250);
+
+        // start game logic
+        GameLogic.gameSequencer = GameSequencer.OWN_TURN;
+        opponentPlayerTurn.set(false);
+        GameLogic game = new GameLogic();
+        game.start();
 
         Scene scene;
         scene = new Scene(mainView, 1200, 800);
