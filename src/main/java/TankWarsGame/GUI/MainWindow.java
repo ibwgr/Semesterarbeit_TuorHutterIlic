@@ -28,7 +28,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -37,36 +36,37 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainWindow extends Application {
 
     /*******************************************************************************/
-    // general
+    // general properties
     /*******************************************************************************/
-    private boolean gameFinished;
-    private static int numberOfTanksToPlace;
     private boolean startupDone = false;
     final int fieldcount = 10; // TODO Rade - Replace 10 with Fx-variable for field size
     AtomicInteger counter1 = new AtomicInteger(0);
     AtomicInteger counter2 = new AtomicInteger(0);
 
-    // check if all the tanks have been placed
+
+    // BooleanProperty to check if all the tanks have been placed
     private IntegerProperty numberOfPlacedTanks = new SimpleIntegerProperty(0);
-//    private IntegerProperty finalTanksToPlace = new SimpleIntegerProperty(numberOfTanksToPlace);
     private BooleanProperty tanksPlaced = new SimpleBooleanProperty();
 
-    // main window
-    Stage window;
-
-    // scenes
-    Scene scene;
-
-    // centre region
-    HBox centreRegion = new HBox();
-    VBox rightCentreRegion = new VBox();
-    VBox leftCentreRegion = new VBox();
-
     // own and opponent gridPane
-    GridPane opponentField = new GridPane();
-    GridPane ownField = new GridPane();
-    GridPane gridpaneTop = new GridPane();
-    GridPane gridpaneBottom = new GridPane();
+    private GridPane opponentField = new GridPane();
+    private GridPane ownField = new GridPane();
+
+    //set field size and create fields
+    Field ownMatchfield = new Field(fieldcount,fieldcount);
+    Field opponentMatchfield = new Field(fieldcount,fieldcount);
+
+    //create player
+    OwnPlayer ownPlayer = new OwnPlayer("philipp",ownMatchfield );
+    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield);
+
+    // Define a variable to store the opponentPlayerTurn property
+    private static BooleanProperty opponentPlayerTurn = new SimpleBooleanProperty();
+    public static final boolean getOpponentPlayerTurn(){return opponentPlayerTurn.get();}
+    public static final void setOpponentTurn(boolean value){opponentPlayerTurn.set(value);}
+
+
+    private static int numberOfTanksToPlace;
 
     // set number of tanks
     public static void setNumberOfTanksToPlace(int numberOfTanksToPlace){
@@ -74,14 +74,6 @@ public class MainWindow extends Application {
     }
 
 
-    //set field size and create fields
-    Field ownMatchfield = new Field(fieldcount,fieldcount);
-    Field opponentMatchfield = new Field(fieldcount,fieldcount);
-
-
-    //create player
-    OwnPlayer ownPlayer = new OwnPlayer("philipp",ownMatchfield );
-    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield);
 
     /*******************************************************************************/
     // create own cells
@@ -108,15 +100,13 @@ public class MainWindow extends Application {
     // create opponent cells
     /*******************************************************************************/
     private Cell createOpponentCell(int horizontal, int vertical) {
-        //AtomicInteger counter1 = new AtomicInteger(0);
-        //AtomicInteger counter2 = new AtomicInteger(0);
 
         Cell cell = new Cell();
         cell.setOnMouseClicked(event -> {
-            if (cell.getFill() != Color.BLACK && cell.getFill() != Color.RED) {
+            if ((cell.getFill() != Color.BLACK && cell.getFill() != Color.RED) && !opponentPlayerTurn.get() && opponentField.isGridLinesVisible()) {
                 Attack attack = new Attack(horizontal, vertical);
+                // attack opponent
                 try {
-                    // TODO --> attack opponent field and not own field - Done Hutti
                     attack = bot.attackField(attack);
                 } catch (OutOfBoundsException oob) {
                 }
@@ -160,11 +150,10 @@ public class MainWindow extends Application {
 
                 switch (attackBot.getAttackStatus()) {
                     case SUCCESSFUL:
-                        //cell.setFill(Color.BLUE); TODO color display for attacks of virtual opponent
                         counter2.getAndIncrement();
                         break;
                     case UNSUCCESSFUL:
-                        //cell.setFill(Color.BLACK);
+                        break;
                 }
                 // TODO only for test reasons --> delete if not needed anymore
                 System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus() );
@@ -181,6 +170,8 @@ public class MainWindow extends Application {
         return cell;
     }
 
+
+
     /*******************************************************************************/
     // create scene
     /*******************************************************************************/
@@ -189,197 +180,174 @@ public class MainWindow extends Application {
         /*********************************
          * own field *
          * */
-        if (!startupDone) {
-//            information.setText("place your tanks"); TODO neues Label @mega
-            // create cells
-            for (int yColumn = 0; yColumn<fieldcount; yColumn++){
-                for (int xRow = 0; xRow<fieldcount; xRow++) {
-                    Cell cells = createOwnCell(yColumn, xRow);
-                    ownField.add(cells, yColumn, xRow);
-                }
+//       information.setText("place your tanks"); TODO neues Label @mega
+
+        // create cells
+        for (int yColumn = 0; yColumn<fieldcount; yColumn++){
+            for (int xRow = 0; xRow<fieldcount; xRow++) {
+                Cell cells = createOwnCell(yColumn, xRow);
+                ownField.add(cells, yColumn, xRow);
             }
-
-            ownField.setGridLinesVisible(true);
-
-            // check iff all tanks have been placed
-            //!!!!!! StartScreen.numberOfTanks ursprünglich finalTanksToPlace
-            // TODO <-- Controll this change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(StartScreen.numberOfTanks));
-            tanksPlaced.addListener((observable, oldValue, newValue) -> {
-                // Only if completed
-                if (newValue)
-                    startupDone = true;
-
-                // TODO only for test reasons --> delete if not needed anymore
-                System.out.println("A1 "+ ownPlayer.getFieldStatus(0,0));
-                System.out.println("A2 "+ ownPlayer.getFieldStatus(1,0));
-                System.out.println("B1 "+ ownPlayer.getFieldStatus(0,1));
-                System.out.println("B2 "+ ownPlayer.getFieldStatus(1,1));
-                // TODO <-- END of deletable stuff
-
-                window.setScene(createScene());
-            });
-
-            /*********************************
-             * CENTRE reagion *
-             * */
-            //Top Bottom and centre region have to be set inside the if (startup) to prevent from being called twice
-            leftCentreRegion.setPadding((new Insets(12, 15, 12, 15)));
-            leftCentreRegion.setSpacing(10);
-//            leftCentreRegion.setStyle("-fx-background-color: white;");
-            leftCentreRegion.getChildren().addAll(ownField);   /* add grid pane fields to centre region */
-
-            //set center region
-            centreRegion.setPadding((new Insets(12, 15, 12, 15)));
-            centreRegion.setSpacing(10);
-//            centreRegion.setStyle("-fx-background-color: white;");
-            centreRegion.getChildren().addAll(leftCentreRegion, rightCentreRegion); /* add grid pane fields to centre region */
-
-            /*********************************
-             * TOP region Layout *
-             * */
-            // create label
-            Label labelTopOwnField = new Label(" Own Field ");
-            labelTopOwnField.setPrefSize(500,40);
-            labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
-            labelTopOwnField.setWrapText(true);
-
-            Label labelTopEnemyField = new Label(" Enemy Field ");
-            labelTopEnemyField.setPrefSize(500,40);
-            labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
-            labelTopEnemyField.setWrapText(true);
-
-            // Set gridpaneTop
-            gridpaneTop.setAlignment(Pos.CENTER);
-            gridpaneTop.setPrefSize(400, 50);
-            gridpaneTop.setVgap(20);
-            gridpaneTop.setHgap(20);
-
-            // add children
-            gridpaneTop.getChildren().addAll(labelTopEnemyField, labelTopOwnField);
-
-            // place the objects on the grid pane
-            gridpaneTop.setConstraints(labelTopOwnField, 0, 0);
-            gridpaneTop.setHalignment(labelTopOwnField, HPos.CENTER);
-
-            gridpaneTop.setConstraints(labelTopEnemyField, 8, 0);
-            gridpaneTop.setHalignment(labelTopEnemyField, HPos.CENTER);
-
-            /*********************************
-             * TOP region DEBUG *
-             * */
-
-            //Set gridpane lines true or false (debug)
-            gridpaneTop.setGridLinesVisible(false);
-
-            /*********************************
-             * BOTTOM reagion *
-             * */
-            // create label
-            Label labelBottomInfo = new Label("Introduction:" +
-                    "1. Set your tanks on the left field. " + "2. Now you can attack the enemy field.");
-            labelBottomInfo.setPrefSize(500,120);
-            labelBottomInfo.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
-            labelBottomInfo.setWrapText(true);
-
-            // create Button
-            Button buttonCancelMain = new Button("Cancel");
-            buttonCancelMain.setPrefSize(150,40);
-            // invisible Button
-            Button buttonInvisible = new Button("");
-            buttonInvisible.setPrefSize(150,40);
-            buttonInvisible.setVisible(false);
-
-            // create textfield
-            TextField textfieldHitCounterOwn = new TextField();
-            textfieldHitCounterOwn.setPrefSize(150, 40);
-            //set pre Text in Textfield and style
-            textfieldHitCounterOwn.setPromptText("Your tanks destroyed");
-            textfieldHitCounterOwn.setAlignment(Pos.CENTER);
-            textfieldHitCounterOwn.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
-
-            TextField textfieldHitCounterEnemy = new TextField();
-            textfieldHitCounterEnemy.setPrefSize(150, 40);
-            //set pre Text in Textfield and style
-            textfieldHitCounterEnemy.setPromptText("Enemy tanks destroyed");
-            textfieldHitCounterEnemy.setAlignment(Pos.CENTER);
-            textfieldHitCounterEnemy.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
-
-            // Set gridpaneBottom
-            gridpaneBottom.setAlignment(Pos.CENTER);
-            gridpaneBottom.setPrefSize(100, 200);
-//            gridpaneBottom.setVgap(20);
-            gridpaneBottom.setHgap(20);
-
-            // add children
-            gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, textfieldHitCounterEnemy, textfieldHitCounterOwn);
-
-            // place the objects on the grid pane
-            gridpaneBottom.setConstraints(labelBottomInfo, 9, 0);
-            gridpaneBottom.setHalignment(labelBottomInfo, HPos.CENTER);
-
-            gridpaneBottom.setConstraints(buttonCancelMain, 17, 1);
-            gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
-
-            gridpaneBottom.setConstraints(textfieldHitCounterOwn, 0, 0);
-            gridpaneBottom.setValignment(textfieldHitCounterOwn, VPos.TOP);
-
-            gridpaneBottom.setConstraints(textfieldHitCounterEnemy, 17, 0);
-            gridpaneBottom.setValignment(textfieldHitCounterEnemy, VPos.TOP);
         }
 
-        /*********************************
-         * Bottom region DEBUG *
-         * */
+        ownField.setStyle("-fx-background-color: white;");
+        ownField.setGridLinesVisible(true);
 
-        //Set gridpane lines true or false (debug)
-        gridpaneBottom.setGridLinesVisible(false);
 
         /*********************************
          * opponent field *
          * */
-        if ( startupDone ) {
+//      information.setText("start attacking your opponent"); TODO new label @rade
 
-            // TODO --> create virtual opponent - Hutti: Done but at the beginning
-
-//            information.setText("start attacking your opponent"); TODO new label @rade
-
-
-            // create cells
-            for (int yColumn = 0; yColumn < fieldcount; yColumn++){
-                for (int xRow = 0; xRow < fieldcount; xRow++) {
-                    Cell cellsOpponent = createOpponentCell(yColumn, xRow);
-                    opponentField.add(cellsOpponent, yColumn, xRow);
-                }
+        // create cells
+        for (int yColumn = 0; yColumn < fieldcount; yColumn++){
+            for (int xRow = 0; xRow < fieldcount; xRow++) {
+                Cell cellsOpponent = createOpponentCell(yColumn, xRow);
+                opponentField.add(cellsOpponent, yColumn, xRow);
             }
-
-            //Place tanks randomly on opponent field
-            for (int i = 0; i < StartScreen.numberOfTanks; i++) {
-                int[] positionTanks = bot.placeRandom(fieldcount);
-                try {
-                    bot.field.placeTank(positionTanks[0], positionTanks[1]);
-                } catch (FieldOccupiedException fo) {
-                }
-                // TODO only for test reasons, delete after
-                //Cell cellsRandoms = createOpponentCell(positionTanks[0], positionTanks[1]);
-                //opponentField.add(cellsRandoms, positionTanks[0], positionTanks[1]);
-                //cellsRandoms.setFill(Color.RED);
-                //cellsRandoms.setStroke(Color.ORANGE);
-                // TODO end of deletable test code
-            }
-
-            opponentField.setGridLinesVisible(true);
-
-
-            /*********************************
-             * right CENTRE reagion *
-             * */
-            rightCentreRegion.setPadding((new Insets(12, 15, 12, 95)));
-            rightCentreRegion.setSpacing(10);
-//            rightCentreRegion.setStyle("-fx-background-color: white;");
-            rightCentreRegion.getChildren().addAll(opponentField);
-
         }
+
+
+        //Place tanks randomly on opponent field
+        for (int i = 0; i < StartScreen.numberOfTanks; i++) {
+            int[] positionTanks = bot.placeRandom(fieldcount);
+            try {
+                bot.field.placeTank(positionTanks[0], positionTanks[1]);
+            } catch (FieldOccupiedException fo) { }
+        }
+        // hide opponent field
+        opponentField.setGridLinesVisible(false);
+        opponentField.setStyle("-fx-background-color: transparent; -fx-stroke: white;");
+
+
+
+        /*********************************
+         * check iff all own tanks have been placed
+         * show opponent field as soon all own tanks have been placed
+         * */
+        tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(StartScreen.numberOfTanks));
+        tanksPlaced.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                startupDone = true;
+            }
+            opponentField.setStyle("-fx-background-color: white;");
+            opponentField.setGridLinesVisible(true);
+        });
+
+
+
+
+        /*********************************
+         * CENTRE reagion *
+         * */
+        VBox leftCentreRegion = new VBox();
+        leftCentreRegion.setPadding((new Insets(12, 15, 12, 15)));
+        leftCentreRegion.setSpacing(10);
+        leftCentreRegion.getChildren().addAll(ownField);   /* add grid pane fields to centre region */
+
+        VBox rightCentreRegion = new VBox();
+        rightCentreRegion.setPadding((new Insets(12, 15, 12, 95)));
+        rightCentreRegion.setSpacing(10);
+        rightCentreRegion.getChildren().addAll(opponentField);
+
+        //set center region
+        HBox centreRegion = new HBox();
+        centreRegion.setPadding((new Insets(12, 15, 12, 15)));
+        centreRegion.setSpacing(10);
+        centreRegion.getChildren().addAll(leftCentreRegion, rightCentreRegion); /* add grid pane fields to centre region */
+
+
+        /*********************************
+        * TOP region Layout *
+        * */
+        // create label
+         Label labelTopOwnField = new Label(" Own Field ");
+         labelTopOwnField.setPrefSize(500,40);
+         labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+         labelTopOwnField.setWrapText(true);
+
+         Label labelTopEnemyField = new Label(" Enemy Field ");
+         labelTopEnemyField.setPrefSize(500,40);
+         labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+         labelTopEnemyField.setWrapText(true);
+
+         // Set gridpaneTop
+        GridPane gridPaneTop = new GridPane();
+        gridPaneTop.setAlignment(Pos.CENTER);
+        gridPaneTop.setPrefSize(400, 50);
+        gridPaneTop.setVgap(20);
+        gridPaneTop.setHgap(20);
+
+        // add children
+        gridPaneTop.getChildren().addAll(labelTopEnemyField, labelTopOwnField);
+
+        // place the objects on the grid pane
+        gridPaneTop.setConstraints(labelTopOwnField, 0, 0);
+        gridPaneTop.setHalignment(labelTopOwnField, HPos.CENTER);
+
+        gridPaneTop.setConstraints(labelTopEnemyField, 8, 0);
+        gridPaneTop.setHalignment(labelTopEnemyField, HPos.CENTER);
+
+        //Set gridpane lines true or false (debug)
+        gridPaneTop.setGridLinesVisible(false);
+
+        /*********************************
+         * BOTTOM reagion *
+         * */
+        // create label
+        Label labelBottomInfo = new Label("Introduction:" + "1. Set your tanks on the left field. " + "2. Now you can attack the enemy field.");
+        labelBottomInfo.setPrefSize(500,120);
+        labelBottomInfo.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+        labelBottomInfo.setWrapText(true);
+
+        // create Button
+        Button buttonCancelMain = new Button("Cancel");
+        buttonCancelMain.setPrefSize(150,40);
+        // invisible Button
+        Button buttonInvisible = new Button("");
+        buttonInvisible.setPrefSize(150,40);
+        buttonInvisible.setVisible(false);
+
+        // create textfield
+        TextField textfieldHitCounterOwn = new TextField();
+        textfieldHitCounterOwn.setPrefSize(150, 40);
+        //set pre Text in Textfield and style
+        textfieldHitCounterOwn.setPromptText("Your tanks destroyed");
+        textfieldHitCounterOwn.setAlignment(Pos.CENTER);
+        textfieldHitCounterOwn.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
+
+        TextField textfieldHitCounterEnemy = new TextField();
+        textfieldHitCounterEnemy.setPrefSize(150, 40);
+        //set pre Text in Textfield and style
+        textfieldHitCounterEnemy.setPromptText("Enemy tanks destroyed");
+        textfieldHitCounterEnemy.setAlignment(Pos.CENTER);
+        textfieldHitCounterEnemy.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
+
+        // Set gridpaneBottom
+        GridPane gridpaneBottom = new GridPane();
+        gridpaneBottom.setAlignment(Pos.CENTER);
+        gridpaneBottom.setPrefSize(100, 200);
+        gridpaneBottom.setHgap(20);
+
+        // add children
+        gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, textfieldHitCounterEnemy, textfieldHitCounterOwn);
+
+        // place the objects on the grid pane
+        gridpaneBottom.setConstraints(labelBottomInfo, 9, 0);
+        gridpaneBottom.setHalignment(labelBottomInfo, HPos.CENTER);
+
+        gridpaneBottom.setConstraints(buttonCancelMain, 17, 1);
+        gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
+
+        gridpaneBottom.setConstraints(textfieldHitCounterOwn, 0, 0);
+        gridpaneBottom.setValignment(textfieldHitCounterOwn, VPos.TOP);
+
+        gridpaneBottom.setConstraints(textfieldHitCounterEnemy, 17, 0);
+        gridpaneBottom.setValignment(textfieldHitCounterEnemy, VPos.TOP);
+
+        //Set gridpane lines true or false (debug)
+        gridpaneBottom.setGridLinesVisible(false);
+
 
         /*******************************************************************************/
         // main view - insert all regions
@@ -393,23 +361,20 @@ public class MainWindow extends Application {
 
         //region setting
         mainView.setCenter(centreRegion);
-        mainView.setTop(gridpaneTop);
+        mainView.setTop(gridPaneTop);
         mainView.setBottom(gridpaneBottom);
         mainView.getBottom().prefHeight(250);
 
+        Scene scene;
         scene = new Scene(mainView, 1200, 800);
         return scene;
     }
 
 
-
-
     @Override
     public void start(Stage primaryStage) throws Exception {
-        /*******************************************************************************/
-        // Main Window - show
-        /*******************************************************************************/
-        window = primaryStage;
+        // main window
+        Stage window;
         window = primaryStage;
         window.setScene(createScene());
         window.setTitle("TANK WARS");
@@ -417,8 +382,3 @@ public class MainWindow extends Application {
         }
 
     }
-
-
-
-
-
