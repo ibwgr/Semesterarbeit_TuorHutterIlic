@@ -1,20 +1,49 @@
 package TankWarsGame.Player;
 
 import TankWarsGame.Field.Field;
+import TankWarsGame.Field.FieldOccupiedException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class VirtualOpponent extends Player {
     private Attack attack;
+    List<List<Integer>> listRandom;
 
     /*********************************
      * Constructors
      *
      * @param name
      * @param field*/
-    public VirtualOpponent(String name, Field field) {
+
+    public VirtualOpponent(String name, Field field, int fc) {
         // TODO place tanks randomly on field while creating new opponent - Hutti: Method below placeRandom
         super(name, field);
+
+        int[][] attackOptions;
+        attackOptions = new int[fc * fc][2];
+        int c = 0;
+
+        for (int m = 0; m < fc; m++) {
+            for (int n = 0; n < fc; n++) {
+                attackOptions[c][0] = m;
+                attackOptions[c++][1] = n;
+                if (c == (fc * fc)) {
+                    break;
+                }
+            }
+        }
+
+        List<List<Integer>> lists = new ArrayList<>();
+        for (int[] options : attackOptions) {
+            List<Integer> list = new ArrayList<>();
+            for (int i : options) {
+                list.add(i);
+            }
+            lists.add(list);
+        }
+        this.listRandom = lists;
     }
 
     /*********************************
@@ -29,7 +58,7 @@ public class VirtualOpponent extends Player {
     public Attack attackField(Attack attack) throws OutOfBoundsException {
         // check if position is within field boundaries
         this.checkIfInBounds(attack.getHorizontalPosition(), attack.getVerticalPosition());
-
+        this.getFieldStatus(attack.getHorizontalPosition(), attack.getVerticalPosition());
 
         // TODO attack opponent field - Hutti: Done
         return super.field.attackField(attack);
@@ -37,16 +66,15 @@ public class VirtualOpponent extends Player {
 
     }
 
-    public int [] placeRandom(int fieldcount){
+    public int [] getRandom() {
+
+        int index;
+
         Random random = new Random();
-        int randomHorizontal;
-        int randomVertical;
+        index = random.nextInt(listRandom.size());
 
-        randomHorizontal = random.nextInt(fieldcount);
-        randomVertical = random.nextInt(fieldcount);
-        int [] a = {randomHorizontal, randomVertical};
-
-        return a;
-
+        int[] data = {listRandom.get(index).get(0), listRandom.get(index).get(1)};
+        listRandom.remove(index);
+        return data;
     }
 }

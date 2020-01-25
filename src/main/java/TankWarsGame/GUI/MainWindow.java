@@ -4,10 +4,7 @@ import TankWarsGame.Field.Cell;
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
 import TankWarsGame.Field.FieldStatus;
-import TankWarsGame.Player.Attack;
-import TankWarsGame.Player.OutOfBoundsException;
-import TankWarsGame.Player.OwnPlayer;
-import TankWarsGame.Player.VirtualOpponent;
+import TankWarsGame.Player.*;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -26,6 +23,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static TankWarsGame.GUI.Music.playMusic;
 
 
 public class MainWindow extends Application {
@@ -84,7 +83,7 @@ public class MainWindow extends Application {
 
     //create player
     OwnPlayer ownPlayer = new OwnPlayer("philipp",ownMatchfield );
-    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield);
+    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield, fieldcount);
 
     /*******************************************************************************/
     // create own cells
@@ -95,6 +94,7 @@ public class MainWindow extends Application {
             if (!startupDone && cell.getFill() != Color.GREEN) {
                 try {
                     ownPlayer.field.placeTank(horizontal, vertical);
+                    playMusic("./sounds/place.wav");
                 } catch (FieldOccupiedException fo) {
                 }
                 numberOfPlacedTanks.set(numberOfPlacedTanks.get() + 1);
@@ -121,11 +121,12 @@ public class MainWindow extends Application {
                 try {
                     // TODO --> attack opponent field and not own field - Done Hutti
                     attack = bot.attackField(attack);
+                    playMusic("./sounds/shot.wav");
                 } catch (OutOfBoundsException oob) {
                 }
 
                 // TODO only for test reasons --> delete if not needed anymore
-                System.out.println("You have fired: H:" + horizontal + " V:" + vertical + " " + attack.getAttackStatus() );
+                System.out.println("You have fired: H:" + horizontal + " V:" + vertical + " " + attack.getAttackStatus());
                 // TODO <-- END of deletable stuff
 
                 switch (attack.getAttackStatus()) {
@@ -137,52 +138,56 @@ public class MainWindow extends Application {
                         cell.setFill(Color.BLACK);
                 }
 
-                //Random Attack VirtualOpponent
-                int[]virtualAttack = bot.placeRandom(fieldcount);
-                Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+                    int[] virtualAttack = bot.getRandom();
+                    Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
 
-                try {
-                    attackBot = ownPlayer.attackField(attackBot);
-                } catch (OutOfBoundsException oob) {
-                }
-
-                ObservableList<Node> childrens = ownField.getChildren();
-                for (Node node : childrens)
-                    if (ownField.getRowIndex(node) == virtualAttack[0] && ownField.getColumnIndex(node) == virtualAttack[1]) {
-                        Cell cell1 = new Cell();
-                        cell1 = (Cell)node;
-                        if ( cell1.getFill() == Color.GREEN ){
-                            cell1.setFill(Color.RED);
-                        }else {
-                            cell1.setFill(Color.BLACK);
-                        }
-
-                        break;
+                    try {
+                        attackBot = ownPlayer.attackField(attackBot);
+                        playMusic("./sounds/shot.wav");
+                    } catch (OutOfBoundsException oob) {
                     }
 
+                    ObservableList<Node> childrens = ownField.getChildren();
+                    for (Node node : childrens)
+                        if (ownField.getRowIndex(node) == virtualAttack[1] && ownField.getColumnIndex(node) == virtualAttack[0]) {
+                            Cell cell1 = new Cell();
+                            cell1 = (Cell) node;
+                            if (cell1.getFill() == Color.GREEN) {
+                                cell1.setFill(Color.RED);
+                            } else {
+                                cell1.setFill(Color.BLACK);
+                            }
 
-                switch (attackBot.getAttackStatus()) {
-                    case SUCCESSFUL:
-                        //cell.setFill(Color.BLUE); TODO color display for attacks of virtual opponent
-                        counter2.getAndIncrement();
-                        break;
-                    case UNSUCCESSFUL:
-                        //cell.setFill(Color.BLACK);
+                            break;
+                        }
+
+                    switch (attackBot.getAttackStatus()) {
+                        case SUCCESSFUL:
+                            //cell.setFill(Color.BLUE);
+                            counter2.getAndIncrement();
+                            break;
+                        case UNSUCCESSFUL:
+                            //cell.setFill(Color.BLACK);
+                    }
+
+                    // TODO only for test reasons --> delete if not needed anymore
+                    System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus());
+                    // TODO <-- END of deletable stuff
                 }
-                // TODO only for test reasons --> delete if not needed anymore
-                System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus() );
-                // TODO <-- END of deletable stuff
-            }
-            System.out.println("Player: " + counter1.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + counter2.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
-            if (counter1.intValue() == StartScreen.numberOfTanks){
-                System.out.println("You win");
-            }
-            else if (counter2.intValue() == StartScreen.numberOfTanks){
-                System.out.println("You loose");
-            }
+                System.out.println("Player: " + counter1.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + counter2.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
+                if (counter1.intValue() == StartScreen.numberOfTanks) {
+                    System.out.println("You win");
+                    playMusic("./sounds/winner.wav");
+                } else if (counter2.intValue() == StartScreen.numberOfTanks) {
+                    System.out.println("You loose");
+                    playMusic("./sounds/looser.wav");
+                }
+           // }
+
         });
         return cell;
     }
+
 
     /*******************************************************************************/
     // create scene
@@ -279,7 +284,7 @@ public class MainWindow extends Application {
 
             //Place tanks randomly on opponent field
             for (int i = 0; i < StartScreen.numberOfTanks; i++) {
-                int[] positionTanks = bot.placeRandom(fieldcount);
+                int[] positionTanks = bot.getRandom();
                 try {
                     bot.field.placeTank(positionTanks[0], positionTanks[1]);
                 } catch (FieldOccupiedException fo) {

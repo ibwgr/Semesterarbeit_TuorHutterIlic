@@ -21,9 +21,9 @@ class VirtualOpponentTest {
 
     @Test
     void placeRandom_firstIntShouldWithin0And6(){
-        VirtualOpponent virtualOpponent = new VirtualOpponent("Opponent",mock(Field.class));
+        VirtualOpponent virtualOpponent = new VirtualOpponent("Opponent",mock(Field.class),5);
 
-        int[] resultArray = virtualOpponent.placeRandom(6);
+        int[] resultArray = virtualOpponent.getRandom();
 
         Assertions.assertTrue((resultArray[0] >= 0));
         Assertions.assertTrue((resultArray[0] < 6));
@@ -32,9 +32,9 @@ class VirtualOpponentTest {
 
        @Test
     void placeRandom_secondIntShouldBeWithin0And6(){
-        VirtualOpponent virtualOpponent = new VirtualOpponent("Opponent",mock(Field.class));
+        VirtualOpponent virtualOpponent = new VirtualOpponent("Opponent",mock(Field.class),5);
 
-        int[] resultArray = virtualOpponent.placeRandom(6);
+        int[] resultArray = virtualOpponent.getRandom();
 
         Assertions.assertTrue((resultArray[1] >= 0));
            Assertions.assertTrue((resultArray[0] < 6));
