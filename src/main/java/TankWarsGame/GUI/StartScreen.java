@@ -247,7 +247,6 @@ public class StartScreen extends Application {
                 if(Objects.equals(modeSelected,"Singleplayer")) {
                     MainWindow screen = new MainWindow();
                     try {
-                        System.out.println("Single");
                         screen.start(s);
 
                     } catch (Exception e) {

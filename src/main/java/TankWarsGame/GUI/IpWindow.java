@@ -20,6 +20,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class IpWindow extends Application {
+
+    public static String IpAdress;
     // main window
     Stage ipwindow;
     // scenes
@@ -96,6 +98,19 @@ public class IpWindow extends Application {
         GridPane.setConstraints(buttonIpCancel, 3,13);
         GridPane.setHalignment(buttonIpCancel, HPos.CENTER);
 
+        /*******************************************************************************/
+        //Ip Listener
+        /*******************************************************************************/
+        buttonConnect.setOnMouseClicked(mouseEvent -> {
+            label:
+            try {
+                start(MainWindow.);
+            } catch (Exception e) {
+                textfieldEnemyIp.setText("HELP: You need the IP adress of your enemy.");
+                break label;
+            }
+
+        });
 
         scene = new Scene(gridpaneIpSetting, 800, 600);
         return scene;
@@ -111,6 +126,8 @@ public class IpWindow extends Application {
         ipwindow.setScene(createScene());
         ipwindow.setTitle("TANK WARS");
         ipwindow.show();
+
+
     }
 
 }
