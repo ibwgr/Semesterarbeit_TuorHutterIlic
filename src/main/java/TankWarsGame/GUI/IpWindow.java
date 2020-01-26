@@ -42,9 +42,6 @@ public class IpWindow extends Application {
         /*******************************************************************************/
         GridPane gridpaneIpSetting = new GridPane();
         //set Background
-//        gridpaneIpSetting .setStyle("-fx-background-image: url(https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg); " +
-//                "-fx-background-position: center center; " +
-//                "-fx-background-repeat: stretch;");
         gridpaneIpSetting.setStyle("-fx-background-color: lightgray");
         //TODO Doesn't work yet and buttons/textfields function @rade
         //TODO make WINDOW NOT RESIZABLE!!!!!!!!!!!!!!!!!!!!@rade
@@ -85,7 +82,7 @@ public class IpWindow extends Application {
         buttonIpCancel.setPrefSize(150, 40);
         buttonIpCancel.setText("Cancel");
 
-        Image imageTank = new Image("File:Dokumentation/tank.png");
+        Image imageTank = new Image("File:images/tank.png");
         ImageView imageviewTank = new ImageView(imageTank);
         imageviewTank.setFitWidth(300);
         imageviewTank.setFitHeight(200);

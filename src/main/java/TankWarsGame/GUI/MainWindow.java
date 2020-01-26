@@ -26,10 +26,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -417,11 +415,12 @@ public class MainWindow extends Application {
         /*******************************************************************************/
         BorderPane mainView = new BorderPane();
         //set Background
-        mainView.setStyle("-fx-background-image: url(https://i.ebayimg.com/images/g/CMAAAOSwu95c9P2a/s-l1600.jpg); " +
-                "-fx-background-position: center center; " +
-                "-fx-background-repeat: stretch;");
         //TODO Doesn't work yet and buttons/textfields function @rade
         //TODO make WINDOW NOT RESIZABLE!!!!!!!!!!!!!!!!!!!!@rade
+        BackgroundImage backgroundMain = new BackgroundImage(new Image("File:images/backgroundWar.jpg" ,1200,800,false,true),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        //set image on gridpane
+        mainView.setBackground(new Background(backgroundMain));
 
         //region setting
         mainView.setCenter(centreRegion);
