@@ -41,6 +41,7 @@ public class MainWindow extends Application {
     // general properties
     /*******************************************************************************/
 
+    Stage window;
     private static int numberOfTanksToPlace;                                    // number of tanks to place
     private static AtomicInteger ownGameScore = new AtomicInteger(0);
     private static AtomicInteger opponentGameScore = new AtomicInteger(0);
@@ -251,7 +252,7 @@ public class MainWindow extends Application {
                     switch (attackBot.getAttackStatus()) {
                         case SUCCESSFUL:
                             //cell.setFill(Color.BLUE);
-                            counter2.getAndIncrement();
+                            opponentGameScore.getAndIncrement();
                             break;
                         case UNSUCCESSFUL:
                             //cell.setFill(Color.BLACK);
@@ -261,11 +262,11 @@ public class MainWindow extends Application {
                     System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus());
                     // TODO <-- END of deletable stuff
                 }
-                System.out.println("Player: " + counter1.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + counter2.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
-                if (counter1.intValue() == StartScreen.numberOfTanks) {
+                System.out.println("Player: " + ownGameScore.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + opponentGameScore.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
+                if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
                     System.out.println("You win");
                     playMusic("./sounds/winner.wav");
-                } else if (counter2.intValue() == StartScreen.numberOfTanks) {
+                } else if (opponentGameScore.intValue() == StartScreen.numberOfTanks) {
                     System.out.println("You loose");
                     playMusic("./sounds/looser.wav");
                 }
@@ -273,10 +274,11 @@ public class MainWindow extends Application {
 
                 opponentPlayerTurn.set(false);
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_LOST_AFTER_OPPONENT_TURN;
-            }
+
 
 
         });
+
 
 
 
@@ -439,7 +441,7 @@ public class MainWindow extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // main window
-        Stage window;
+        //Stage window;
         window = primaryStage;
         window.setScene(createScene());
         window.setTitle("TANK WARS");
