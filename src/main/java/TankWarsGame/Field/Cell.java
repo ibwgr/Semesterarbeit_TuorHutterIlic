@@ -9,7 +9,7 @@ public class Cell extends Rectangle {
 
     public Cell(){
         super(50, 50);
-        setFill(Color.WHITE);
-        setStroke(Color.BLACK);
+        setFill(Color.TRANSPARENT);
+        setStroke(Color.TRANSPARENT);
     }
 }
