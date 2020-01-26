@@ -42,7 +42,7 @@ public class MainWindow extends Application {
     private boolean gameFinished;
     private static int numberOfTanksToPlace;
     private boolean startupDone = false;
-    final int fieldcount = 10; // TODO Rade - Replace 10 with Fx-variable for field size
+    final int fieldcount = StartScreen.numberOfCells; // TODO Rade - Replace 10 with Fx-variable for field size
     AtomicInteger counter1 = new AtomicInteger(0);
     AtomicInteger counter2 = new AtomicInteger(0);
 
@@ -202,8 +202,6 @@ public class MainWindow extends Application {
             ownField.setGridLinesVisible(true);
 
             // check iff all tanks have been placed
-            //!!!!!! StartScreen.numberOfTanks ursprünglich finalTanksToPlace
-            // TODO <-- Controll this change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(StartScreen.numberOfTanks));
             tanksPlaced.addListener((observable, oldValue, newValue) -> {
                 // Only if completed
@@ -326,12 +324,23 @@ public class MainWindow extends Application {
 
             gridpaneBottom.setConstraints(textfieldHitCounterEnemy, 17, 0);
             gridpaneBottom.setValignment(textfieldHitCounterEnemy, VPos.TOP);
+
+            /*********************************
+             * Cancel Button *
+             * */
+            buttonCancelMain.setOnMouseClicked(mouseEvent -> {
+                StartScreen startScreen = new StartScreen();
+                try{
+                    startScreen.start(window);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         /*********************************
          * Bottom region DEBUG *
          * */
-
         //Set gridpane lines true or false (debug)
         gridpaneBottom.setGridLinesVisible(false);
 
@@ -386,10 +395,11 @@ public class MainWindow extends Application {
         /*******************************************************************************/
         BorderPane mainView = new BorderPane();
         //set Background
-        mainView.setStyle("-fx-background-image: url(https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg); " +
+        mainView.setStyle("-fx-background-image: url(https://i.ebayimg.com/images/g/CMAAAOSwu95c9P2a/s-l1600.jpg); " +
                 "-fx-background-position: center center; " +
                 "-fx-background-repeat: stretch;");
         //TODO Doesn't work yet and buttons/textfields function @rade
+        //TODO make WINDOW NOT RESIZABLE!!!!!!!!!!!!!!!!!!!!@rade
 
         //region setting
         mainView.setCenter(centreRegion);

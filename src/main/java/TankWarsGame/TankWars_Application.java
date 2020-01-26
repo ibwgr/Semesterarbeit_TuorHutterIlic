@@ -12,7 +12,6 @@ public class TankWars_Application {
         // launch window >>> DemoFrame
         System.out.println("start game");
         MainWindow.setNumberOfTanksToPlace(StartScreen.numberOfTanks);
-//        MainWindow.setNumberOfTanksToPlace(2);--->alt
         launch(StartScreen.class);
 
     }
