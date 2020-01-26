@@ -24,7 +24,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -69,7 +72,8 @@ public class MainWindow extends Application {
     private static BooleanProperty opponentPlayerTurn = new SimpleBooleanProperty();
     public static final boolean getOpponentPlayerTurn(){return opponentPlayerTurn.get();}
     public static final void setOpponentTurn(boolean value){opponentPlayerTurn.set(value);}
-
+    // main window
+    Stage window;
 
 
     /*******************************************************************************/
@@ -430,8 +434,7 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // main window
-        Stage window;
+
         window = primaryStage;
         window.setScene(createScene());
         window.setTitle("TANK WARS");

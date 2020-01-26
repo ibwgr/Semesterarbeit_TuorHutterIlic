@@ -21,7 +21,7 @@ import java.net.UnknownHostException;
 
 public class IpWindow extends Application {
 
-    public static String IpAdress;
+    public static String enemyIpAdress;
     // main window
     Stage ipwindow;
     // scenes
@@ -104,7 +104,7 @@ public class IpWindow extends Application {
         buttonConnect.setOnMouseClicked(mouseEvent -> {
             label:
             try {
-                start(MainWindow.);
+//                start(MainWindow.);
             } catch (Exception e) {
                 textfieldEnemyIp.setText("HELP: You need the IP adress of your enemy.");
                 break label;
