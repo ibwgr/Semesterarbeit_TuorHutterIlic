@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class VirtualOpponent extends Player {
+public class VirtualOpponent extends Player implements Opponent {
     private Attack attack;
     List<List<Integer>> listRandom;
 
@@ -49,6 +49,7 @@ public class VirtualOpponent extends Player {
     /*********************************
      * override abstract methods
      */
+    @Override
     public Attack getAttack() {
         // TODO implement logic to create random attacks - Hutti: same Method as for place tanks randomly
         return null;

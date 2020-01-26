@@ -3,6 +3,8 @@ package TankWarsGame.GUI;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,10 +16,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
+
+import javax.swing.*;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
-
+import java.util.Objects;
 
 
 public class StartScreen extends Application {
@@ -25,6 +29,7 @@ public class StartScreen extends Application {
     // VARIABLE for MainWindow tanks, cells one side:
     public static int numberOfTanks;
     public static int numberOfCells;
+    public static String modeSelected;
 
     // launch the application
     public void start(Stage s) {
@@ -59,8 +64,12 @@ public class StartScreen extends Application {
         buttonCancel.setPrefSize(150,40);
 
         // create Combobox
-        ComboBox comboBoxGameSetting = new ComboBox();
+//        ObservableList settingGame = FXCollections.observableArrayList(
+//                "Multiplayer", "Singleplayer");
+        ComboBox<String> comboBoxGameSetting = new ComboBox<>();
+        comboBoxGameSetting.getItems().addAll("Singleplayer", "Multiplayer");
         comboBoxGameSetting.setPrefSize(500, 40);
+        comboBoxGameSetting.setPromptText("Select a game mode:");
 
         // create Textfield number of tanks input
         TextField textfieldNumberOfTanks = new TextField();
@@ -101,16 +110,16 @@ public class StartScreen extends Application {
 
         //set Background image READY FOR WAR
         //TODO ok?
-        BackgroundImage startScreenTank = new BackgroundImage(new Image("https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg" ,1200,700,false,true),
+        BackgroundImage backgroundStart = new BackgroundImage(new Image("https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg" ,1200,700,false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         //set image on gridpane
-       startGameGrid.setBackground(new Background(startScreenTank));
+       startGameGrid.setBackground(new Background(backgroundStart));
 
 
         // add to Gridpane in the Center of the startgamePane
         startGameGrid.getChildren().addAll(startGameScreenTitle, comboBoxGameSetting, buttonCancel, textfieldNumberOfTanks, buttonConfirm, labelInstruction, buttonPlay, textfieldSquareSide);
 
-        //Die Objekte auf dem Gridpane verteilen
+        //place the objects on the grid pane
         GridPane.setConstraints(startGameScreenTitle, 8, 0);
         GridPane.setHalignment(startGameScreenTitle, HPos.CENTER);
 
@@ -132,10 +141,6 @@ public class StartScreen extends Application {
         GridPane.setConstraints(textfieldSquareSide, 8,5);
         GridPane.setHalignment(textfieldSquareSide, HPos.CENTER);
 
-        //TODO NOT ACTIVE
-//        GridPane.setConstraints(imageViewTank, 8,8);
-//        GridPane.setHalignment(imageViewTank, HPos.CENTER);
-
         GridPane.setConstraints(buttonCancel, 16, 10);
         GridPane.setHalignment(buttonCancel, HPos.CENTER);
 
@@ -147,90 +152,132 @@ public class StartScreen extends Application {
         startGameGrid.setGridLinesVisible(false);
 
 /*******************************************************************************/
-// Creating Buttonevents (ButtonPlay, Confirm Fieldsize, Cancel)
+// Creating Buttonevents (Combobox, ButtonPlay, Confirm Fieldsize, Cancel)
 /*******************************************************************************/
+// you have to select a game mode
+        textfieldNumberOfTanks.setDisable(true);
+        textfieldSquareSide.setDisable(true);
+        comboBoxGameSetting.valueProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                //modeselected is used for buttonPlay listener
+                modeSelected = t1;
+                if(Objects.equals(t1,"Singleplayer")){
+                    //Enable number of tanks and fieldsize setting
+                    textfieldNumberOfTanks.setDisable(false);
+                    textfieldSquareSide.setDisable(false);
+                    //set singleplayer instruction
+                    labelInstruction.setText("In Singleplayer mode you can change the fieldsize and number of tanks.(size of the field 5-10, number of tanks 1-10)");
+            //the number of Tanks confirm done with a label, other way: with do while and break;
+                    buttonConfirm.setOnMouseClicked(mouseEvent -> {
+                        label:
+                        try {
+                            textfieldNumberOfTanks.setDisable(false);
+                            textfieldSquareSide.setDisable(false);
+                            comboBoxGameSetting.setDisable(true);
+                            //Setting the Max rules for how many tanks you can place
+                            numberOfTanks = Integer.parseInt(textfieldNumberOfTanks.getText());
+                            numberOfCells = Integer.parseInt(textfieldSquareSide.getText());
+                            if (numberOfTanks <= 10 && numberOfTanks > 0 && numberOfCells <= 10 && numberOfCells >= 5) {
+                                buttonPlay.setDisable(false);
+                                //Set Change fieldsize to invisible. Only way to change fieldsize ReOpen Game
+                //                    textfieldNumberOfTanks.setVisible(false);
+                //                    textfieldSquareSide.setVisible(false); //TODO decide how to do it, rade
+                                textfieldNumberOfTanks.setText(String.valueOf(numberOfTanks));
+                                textfieldNumberOfTanks.setDisable(true);
+                                textfieldSquareSide.setText(String.valueOf(numberOfCells));
+                                textfieldSquareSide.setDisable(true);
+                                buttonConfirm.setVisible(false);
 
-        //the number of Tanks confirm done with a label, other way: with do while and break;
-        buttonConfirm.setOnMouseClicked(mouseEvent -> {
-            //Setting the Max rules for how many tanks you can place
-            label: try {
-                numberOfTanks = Integer.parseInt(textfieldNumberOfTanks.getText());
-                numberOfCells = Integer.parseInt(textfieldSquareSide.getText());
-                if (numberOfTanks <= 10 && numberOfTanks > 0 && numberOfCells <=10 && numberOfCells >= 5) {
-                    buttonPlay.setDisable(false);
-                    //Set Change fieldsize to invisible. Only way to change fieldsize ReOpen Game
-//                    textfieldNumberOfTanks.setVisible(false);
-//                    textfieldSquareSide.setVisible(false); //TODO decide how to do it, rade
-                    textfieldNumberOfTanks.setText(String.valueOf(numberOfTanks));
+                                labelInstruction.setStyle("-fx-border-color:red; -fx-background-color: lightgray; -fx-font-size: 25; -fx-font-family: monospace");
+                                labelInstruction.setText("         !READY FOR WAR!        ");
+                            }
+                            // output to label when square side to high or to low
+                            else if (numberOfCells > 10 || numberOfCells == 0 || numberOfCells < 5) {
+                                labelInstruction.setText("HELP: Square side has to be between 5 - 10! Fieldsize smallest: 25Cells Largest: 100Cells");
+                            }
+                            //Number Of Tanks out of range text in label!
+                            else if (numberOfTanks > 10 || numberOfTanks == 0) {
+                                //TODO DEFINE OUTPUTLABEL--rade
+                                System.out.println("the size of the field can be between 1 and 10!");
+                                labelInstruction.setText("number of tanks has to be between 1-10!");
+                            } else {
+                                labelInstruction.setText("HELP: Must be a number! Number of tanks has to be between 1-10. Size of the square side has to be between 5 and 10.");
+                            }
+                        } catch (IllegalArgumentException e) {
+                            labelInstruction.setText("HELP: Must be a number! Number of tanks has to be between 1-10. Size of the square side has to be between 5 and 10.");
+                            break label;
+                        }
+
+                    });
+                    //after confirmation of how many tanks you want to place the play button appears, with play the main window appears
+                }else if (Objects.equals(t1, "Multiplayer")){
+                    //disable function, with clear you clear the values that are set if the player sets first singleplayer->values->switch to multiplayer
+                    textfieldNumberOfTanks.clear();
+                    textfieldSquareSide.clear();
+
                     textfieldNumberOfTanks.setDisable(true);
-                    textfieldSquareSide.setText(String.valueOf(numberOfCells));
                     textfieldSquareSide.setDisable(true);
-                    buttonConfirm.setVisible(false);
 
-                    labelInstruction.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 25; -fx-font-family: monospace");
-                    labelInstruction.setText("         !READY FOR WAR!        ");
-                    //set Background image READY FOR WAR
-                    BackgroundImage startScreenReady = new BackgroundImage(new Image("https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg" ,1200,700,false,true),
-                            BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-                    //set image on gridpane
-                    startGameGrid.setBackground(new Background(startScreenReady));
+                    labelInstruction.setText("In Multiplayer mode the fieldsize and number of tanks can't be changed.");
+
+                        buttonConfirm.setOnMouseClicked(mouseEvent -> {
+                            buttonConfirm.setVisible(false);
+                            labelInstruction.setStyle("-fx-border-color:red; -fx-background-color: lightgray; -fx-font-size: 25; -fx-font-family: monospace");
+                            labelInstruction.setText("         !READY FOR WAR!        ");
+                            buttonPlay.setDisable(false);
+
+                        });
+                } else {
+                    //If game mode not selected you cant do anything
+                    textfieldNumberOfTanks.clear();
+                    textfieldSquareSide.clear();
+                    textfieldNumberOfTanks.setDisable(true);
+                    textfieldSquareSide.setDisable(true);
+                    buttonConfirm.setDisable(true);
                 }
-                // output to label when square side to high or to low
-                else if (numberOfCells > 10 || numberOfCells == 0 || numberOfCells < 5){
-                    labelInstruction.setText("HELP: Square side has to be between 5 - 10! Fieldsize smallest: 25Cells Largest: 100Cells");
-                }
-                //Number Of Tanks out of range text in label!
-                else if (numberOfTanks > 10 || numberOfTanks == 0){
-                    //TODO DEFINE OUTPUTLABEL--rade
-                    System.out.println("the size of the field can be between 1 and 10!");
-                    labelInstruction.setText("number of tanks has to be between 1-10!");
-                }
-                else {
-                    labelInstruction.setText("HELP: Must be a number! Number of tanks has to be between 1-10. Size of the square side has to be between 5 and 10.");
-                }
-            } catch (IllegalArgumentException e) {
-                labelInstruction.setText("HELP: Must be a number! Number of tanks has to be between 1-10. Size of the square side has to be between 5 and 10.");
-                break label;
             }
-
         });
-        //after confirmation of how many tanks you want to place the play button appears, with play the main window appears
 
 
 /*******************************************************************************/
 // Play Button (Start Main Game)
 /*******************************************************************************/
             buttonPlay.setOnMouseClicked((event) -> {
-                MainWindow screen = new MainWindow();
-                try {
-                    screen.start(s);
+                if(Objects.equals(modeSelected,"Singleplayer")) {
+                    MainWindow screen = new MainWindow();
+                    try {
+                        screen.start(s);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if (Objects.equals(modeSelected, "Multiplayer")){
+                    IpWindow screen = new IpWindow();
+                    try {
+                        screen.start(s);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
                 }
             });
 
-/*******************************************************************************/
-// Combobox
-/*******************************************************************************/
-
-
-//TODO Create Combobox / FLAG for Single or Multiplayer mode
 
 
 /*******************************************************************************/
 // Cancel Button (Restart)
 /*******************************************************************************/
-    buttonCancel.setOnMouseClicked(mouseEvent -> {
-        try{
-            start(s);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    });
-
-//TODO Create Combobox / FLAG for Single or Multiplayer mode
-
+            buttonCancel.setOnMouseClicked(mouseEvent -> {
+                try{
+                    start(s);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
 
 
 /*******************************************************************************/
@@ -239,10 +286,8 @@ public class StartScreen extends Application {
 
         // create a scene
         Scene tankWars = new Scene(startGameGrid, 1200, 700);
-
         // set the scene
         s.setScene(tankWars);
-
         s.show();
     }
 }
