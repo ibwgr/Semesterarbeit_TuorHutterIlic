@@ -31,6 +31,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -43,8 +44,6 @@ public class MainWindow extends Application {
     /*******************************************************************************/
     // general properties
     /*******************************************************************************/
-
-    Stage window;
     private static int numberOfTanksToPlace;                                    // number of tanks to place
     private static AtomicInteger ownGameScore = new AtomicInteger(0);
     private static AtomicInteger opponentGameScore = new AtomicInteger(0);
@@ -314,11 +313,13 @@ public class MainWindow extends Application {
         // create label
          Label labelTopOwnField = new Label(" Own Field ");
          labelTopOwnField.setPrefSize(500,40);
+         labelTopOwnField.setAlignment(Pos.CENTER);
          labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
          labelTopOwnField.setWrapText(true);
 
          Label labelTopEnemyField = new Label(" Enemy Field ");
          labelTopEnemyField.setPrefSize(500,40);
+         labelTopEnemyField.setAlignment(Pos.CENTER);
          labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
          labelTopEnemyField.setWrapText(true);
 
@@ -361,19 +362,17 @@ public class MainWindow extends Application {
         buttonInvisible.setVisible(false);
 
         // create textfield
-        TextField textfieldHitCounterOwn = new TextField();
-        textfieldHitCounterOwn.setPrefSize(150, 40);
+        Label labelHitCounterOwn = new Label("Your tanks destroyed");
+        labelHitCounterOwn.setPrefSize(150, 40);
         //set pre Text in Textfield and style
-        textfieldHitCounterOwn.setPromptText("Your tanks destroyed");
-        textfieldHitCounterOwn.setAlignment(Pos.CENTER);
-        textfieldHitCounterOwn.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
+        labelHitCounterOwn.setAlignment(Pos.CENTER);
+        labelHitCounterOwn.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 14; -fx-font-family: monospace");
 
-        TextField textfieldHitCounterEnemy = new TextField();
-        textfieldHitCounterEnemy.setPrefSize(150, 40);
+        Label labelHitCounterEnemy = new Label("Enemy tanks destroyed");
+        labelHitCounterEnemy.setPrefSize(150, 40);
         //set pre Text in Textfield and style
-        textfieldHitCounterEnemy.setPromptText("Enemy tanks destroyed");
-        textfieldHitCounterEnemy.setAlignment(Pos.CENTER);
-        textfieldHitCounterEnemy.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
+        labelHitCounterEnemy.setAlignment(Pos.CENTER);
+        labelHitCounterEnemy.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 14; -fx-font-family: monospace");
 
         // Set gridpaneBottom
         GridPane gridpaneBottom = new GridPane();
@@ -382,7 +381,7 @@ public class MainWindow extends Application {
         gridpaneBottom.setHgap(20);
 
         // add children
-        gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, textfieldHitCounterEnemy, textfieldHitCounterOwn);
+        gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, labelHitCounterOwn, labelHitCounterEnemy);
 
         // place the objects on the grid pane
         gridpaneBottom.setConstraints(labelBottomInfo, 9, 0);
@@ -391,11 +390,11 @@ public class MainWindow extends Application {
         gridpaneBottom.setConstraints(buttonCancelMain, 17, 1);
         gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
 
-        gridpaneBottom.setConstraints(textfieldHitCounterOwn, 0, 0);
-        gridpaneBottom.setValignment(textfieldHitCounterOwn, VPos.TOP);
+        gridpaneBottom.setConstraints(labelHitCounterOwn, 0, 0);
+        gridpaneBottom.setValignment(labelHitCounterOwn, VPos.TOP);
 
-        gridpaneBottom.setConstraints(textfieldHitCounterEnemy, 17, 0);
-        gridpaneBottom.setValignment(textfieldHitCounterEnemy, VPos.TOP);
+        gridpaneBottom.setConstraints(labelHitCounterEnemy, 17, 0);
+        gridpaneBottom.setValignment(labelHitCounterEnemy, VPos.TOP);
 
         //Set gridpane lines true or false (debug)
         gridpaneBottom.setGridLinesVisible(false);
