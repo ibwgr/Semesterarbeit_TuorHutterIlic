@@ -189,7 +189,7 @@ public class MainWindow extends Application {
 
             //Place tanks randomly on opponent field
             for (int i = 0; i < StartScreen.numberOfTanks; i++) {
-                int[] positionTanks = bot.getRandom();
+                int[] positionTanks = bot.getPosRandom();
                 try {
                     bot.field.placeTank(positionTanks[0], positionTanks[1]);
                 } catch (FieldOccupiedException fo) {
