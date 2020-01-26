@@ -131,9 +131,3 @@ public class IpWindow extends Application {
     }
 
 }
-
-
-
-
-
-
