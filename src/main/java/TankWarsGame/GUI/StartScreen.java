@@ -110,7 +110,7 @@ public class StartScreen extends Application {
 
         //set Background image READY FOR WAR
         //TODO ok?
-        BackgroundImage backgroundStart = new BackgroundImage(new Image("https://i.ytimg.com/vi/sy2JQr_uGe0/maxresdefault.jpg" ,1200,700,false,true),
+        BackgroundImage backgroundStart = new BackgroundImage(new Image("File:images/backgroundWar.jpg" ,1200,700,false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         //set image on gridpane
        startGameGrid.setBackground(new Background(backgroundStart));
@@ -288,6 +288,7 @@ public class StartScreen extends Application {
         Scene tankWars = new Scene(startGameGrid, 1200, 700);
         // set the scene
         s.setScene(tankWars);
+        s.setResizable(false);
         s.show();
     }
 }

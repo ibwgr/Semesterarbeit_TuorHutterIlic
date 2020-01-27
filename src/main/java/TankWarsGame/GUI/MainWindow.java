@@ -26,8 +26,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -41,8 +43,6 @@ public class MainWindow extends Application {
     /*******************************************************************************/
     // general properties
     /*******************************************************************************/
-
-    Stage window;
     private static int numberOfTanksToPlace;                                    // number of tanks to place
     private static AtomicInteger ownGameScore = new AtomicInteger(0);
     private static AtomicInteger opponentGameScore = new AtomicInteger(0);
@@ -75,7 +75,8 @@ public class MainWindow extends Application {
     private static BooleanProperty opponentPlayerTurn = new SimpleBooleanProperty();
     public static final boolean getOpponentPlayerTurn(){return opponentPlayerTurn.get();}
     public static final void setOpponentTurn(boolean value){opponentPlayerTurn.set(value);}
-
+    // main window
+    Stage window;
 
 
     /*******************************************************************************/
@@ -273,7 +274,7 @@ public class MainWindow extends Application {
                     System.out.println("You loose");
                     playMusic("./sounds/looser.wav");
                 }
-           
+
 
                 opponentPlayerTurn.set(false);
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_LOST_AFTER_OPPONENT_TURN;
@@ -296,7 +297,7 @@ public class MainWindow extends Application {
         leftCentreRegion.getChildren().addAll(ownField);   /* add grid pane fields to centre region */
 
         VBox rightCentreRegion = new VBox();
-        rightCentreRegion.setPadding((new Insets(12, 15, 12, 95)));
+        rightCentreRegion.setPadding((new Insets(12, 15, 12, 100)));
         rightCentreRegion.setSpacing(10);
         rightCentreRegion.getChildren().addAll(opponentField);
 
@@ -304,6 +305,7 @@ public class MainWindow extends Application {
         HBox centreRegion = new HBox();
         centreRegion.setPadding((new Insets(12, 15, 12, 15)));
         centreRegion.setSpacing(10);
+        centreRegion.setAlignment(Pos.CENTER);
         centreRegion.getChildren().addAll(leftCentreRegion, rightCentreRegion); /* add grid pane fields to centre region */
 
 
@@ -313,11 +315,13 @@ public class MainWindow extends Application {
         // create label
          Label labelTopOwnField = new Label(" Own Field ");
          labelTopOwnField.setPrefSize(500,40);
+         labelTopOwnField.setAlignment(Pos.CENTER);
          labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
          labelTopOwnField.setWrapText(true);
 
          Label labelTopEnemyField = new Label(" Enemy Field ");
          labelTopEnemyField.setPrefSize(500,40);
+         labelTopEnemyField.setAlignment(Pos.CENTER);
          labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
          labelTopEnemyField.setWrapText(true);
 
@@ -340,7 +344,7 @@ public class MainWindow extends Application {
 
         //Set gridpane lines true or false (debug)
         gridPaneTop.setGridLinesVisible(false);
-        
+
 
         /*********************************
          * BOTTOM reagion *
@@ -360,19 +364,17 @@ public class MainWindow extends Application {
         buttonInvisible.setVisible(false);
 
         // create textfield
-        TextField textfieldHitCounterOwn = new TextField();
-        textfieldHitCounterOwn.setPrefSize(150, 40);
+        Label labelHitCounterOwn = new Label("Your tanks destroyed");
+        labelHitCounterOwn.setPrefSize(150, 40);
         //set pre Text in Textfield and style
-        textfieldHitCounterOwn.setPromptText("Your tanks destroyed");
-        textfieldHitCounterOwn.setAlignment(Pos.CENTER);
-        textfieldHitCounterOwn.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
+        labelHitCounterOwn.setAlignment(Pos.CENTER);
+        labelHitCounterOwn.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 14; -fx-font-family: monospace");
 
-        TextField textfieldHitCounterEnemy = new TextField();
-        textfieldHitCounterEnemy.setPrefSize(150, 40);
+        Label labelHitCounterEnemy = new Label("Enemy tanks destroyed");
+        labelHitCounterEnemy.setPrefSize(150, 40);
         //set pre Text in Textfield and style
-        textfieldHitCounterEnemy.setPromptText("Enemy tanks destroyed");
-        textfieldHitCounterEnemy.setAlignment(Pos.CENTER);
-        textfieldHitCounterEnemy.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
+        labelHitCounterEnemy.setAlignment(Pos.CENTER);
+        labelHitCounterEnemy.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 14; -fx-font-family: monospace");
 
         // Set gridpaneBottom
         GridPane gridpaneBottom = new GridPane();
@@ -381,7 +383,7 @@ public class MainWindow extends Application {
         gridpaneBottom.setHgap(20);
 
         // add children
-        gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, textfieldHitCounterEnemy, textfieldHitCounterOwn);
+        gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, labelHitCounterOwn, labelHitCounterEnemy);
 
         // place the objects on the grid pane
         gridpaneBottom.setConstraints(labelBottomInfo, 9, 0);
@@ -390,11 +392,11 @@ public class MainWindow extends Application {
         gridpaneBottom.setConstraints(buttonCancelMain, 17, 1);
         gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
 
-        gridpaneBottom.setConstraints(textfieldHitCounterOwn, 0, 0);
-        gridpaneBottom.setValignment(textfieldHitCounterOwn, VPos.TOP);
+        gridpaneBottom.setConstraints(labelHitCounterOwn, 0, 0);
+        gridpaneBottom.setValignment(labelHitCounterOwn, VPos.TOP);
 
-        gridpaneBottom.setConstraints(textfieldHitCounterEnemy, 17, 0);
-        gridpaneBottom.setValignment(textfieldHitCounterEnemy, VPos.TOP);
+        gridpaneBottom.setConstraints(labelHitCounterEnemy, 17, 0);
+        gridpaneBottom.setValignment(labelHitCounterEnemy, VPos.TOP);
 
         //Set gridpane lines true or false (debug)
         gridpaneBottom.setGridLinesVisible(false);
@@ -417,11 +419,12 @@ public class MainWindow extends Application {
         /*******************************************************************************/
         BorderPane mainView = new BorderPane();
         //set Background
-        mainView.setStyle("-fx-background-image: url(https://i.ebayimg.com/images/g/CMAAAOSwu95c9P2a/s-l1600.jpg); " +
-                "-fx-background-position: center center; " +
-                "-fx-background-repeat: stretch;");
         //TODO Doesn't work yet and buttons/textfields function @rade
         //TODO make WINDOW NOT RESIZABLE!!!!!!!!!!!!!!!!!!!!@rade
+        BackgroundImage backgroundMain = new BackgroundImage(new Image("File:images/backgroundWar.jpg" ,1200,800,false,true),
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        //set image on gridpane
+        mainView.setBackground(new Background(backgroundMain));
 
         //region setting
         mainView.setCenter(centreRegion);
@@ -443,11 +446,11 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // main window
-        //Stage window;
+
         window = primaryStage;
         window.setScene(createScene());
         window.setTitle("TANK WARS");
+        window.setResizable(false);
         window.show();
         }
 
