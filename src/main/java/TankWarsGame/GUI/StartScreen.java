@@ -285,9 +285,9 @@ public class StartScreen extends Application {
 /*******************************************************************************/
 
         // create a scene
-        Scene tankWars = new Scene(startGameGrid, 1200, 700);
+        Scene sceneStart = new Scene(startGameGrid, 1200, 700);
         // set the scene
-        s.setScene(tankWars);
+        s.setScene(sceneStart);
         s.setResizable(false);
         s.show();
     }
