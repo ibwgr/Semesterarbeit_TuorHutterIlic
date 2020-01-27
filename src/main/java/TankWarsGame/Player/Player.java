@@ -2,10 +2,16 @@ package TankWarsGame.Player;
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Player {
     public String name;
     public Field field;
 
+    public Player(){
+
+    }
     /*********************************
      * Constructors
      **/

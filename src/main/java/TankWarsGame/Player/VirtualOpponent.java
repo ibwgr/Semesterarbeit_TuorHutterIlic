@@ -11,39 +11,16 @@ public class VirtualOpponent extends Player implements Opponent {
     private Attack attack;
     List<List<Integer>> listRandom;
 
+
     /*********************************
      * Constructors
      *
      * @param name
      * @param field*/
 
-    public VirtualOpponent(String name, Field field, int fc) {
+    public VirtualOpponent(String name, Field field) {
         // TODO place tanks randomly on field while creating new opponent - Hutti: Method below placeRandom
         super(name, field);
-
-        int[][] attackOptions;
-        attackOptions = new int[fc * fc][2];
-        int c = 0;
-
-        for (int m = 0; m < fc; m++) {
-            for (int n = 0; n < fc; n++) {
-                attackOptions[c][0] = m;
-                attackOptions[c++][1] = n;
-                if (c == (fc * fc)) {
-                    break;
-                }
-            }
-        }
-
-        List<List<Integer>> lists = new ArrayList<>();
-        for (int[] options : attackOptions) {
-            List<Integer> list = new ArrayList<>();
-            for (int i : options) {
-                list.add(i);
-            }
-            lists.add(list);
-        }
-        this.listRandom = lists;
     }
 
     /*********************************
@@ -67,17 +44,32 @@ public class VirtualOpponent extends Player implements Opponent {
 
     }
 
-    public int [] getPosRandom() {
+    public void setAttackOptions(int fc) {
 
-        int index;
+            int[][] attackOptions;
+            attackOptions = new int[fc * fc][2];
+            int c = 0;
 
-        Random random = new Random();
-        index = random.nextInt(listRandom.size());
-        System.out.println(listRandom.size());
+            for (int m = 0; m < fc; m++) {
+                for (int n = 0; n < fc; n++) {
+                    attackOptions[c][0] = m;
+                    attackOptions[c++][1] = n;
+                    if (c == (fc * fc)) {
+                        break;
+                    }
+                }
+            }
 
-        int[] data = {listRandom.get(index).get(0), listRandom.get(index).get(1)};
-        return data;
-    }
+            List<List<Integer>> lists = new ArrayList<>();
+            for (int[] options : attackOptions) {
+                List<Integer> list = new ArrayList<>();
+                for (int i : options) {
+                    list.add(i);
+                }
+                lists.add(list);
+            }
+        this.listRandom = lists;
+        }
 
     public int [] getRandom() {
 
@@ -85,10 +77,10 @@ public class VirtualOpponent extends Player implements Opponent {
 
         Random random = new Random();
         index = random.nextInt(listRandom.size());
-        System.out.println(listRandom.size());
 
         int[] data = {listRandom.get(index).get(0), listRandom.get(index).get(1)};
         listRandom.remove(index);
+        System.out.println(listRandom.size());
         return data;
     }
 }

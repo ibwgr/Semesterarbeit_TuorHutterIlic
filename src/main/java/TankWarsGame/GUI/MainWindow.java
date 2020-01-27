@@ -32,6 +32,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static TankWarsGame.GUI.Music.playMusic;
@@ -68,7 +69,7 @@ public class MainWindow extends Application {
 
     //create player
     OwnPlayer ownPlayer = new OwnPlayer("philipp",ownMatchfield );
-    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield, fieldcount);
+    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield);
 
     // Define a variable to store the opponentPlayerTurn property
     private static BooleanProperty opponentPlayerTurn = new SimpleBooleanProperty();
@@ -189,8 +190,9 @@ public class MainWindow extends Application {
 
 
             //Place tanks randomly on opponent field
+            bot.setAttackOptions(fieldcount);
             for (int i = 0; i < StartScreen.numberOfTanks; i++) {
-                int[] positionTanks = bot.getPosRandom();
+                int[] positionTanks = bot.getRandom();
                 try {
                     bot.field.placeTank(positionTanks[0], positionTanks[1]);
                 } catch (FieldOccupiedException fo) {
@@ -225,6 +227,7 @@ public class MainWindow extends Application {
         /*********************************
          * opponent turn
          * */
+        bot.setAttackOptions(fieldcount);
         opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
             if ( getOpponentPlayerTurn()){
                     int[] virtualAttack = bot.getRandom();
