@@ -73,7 +73,6 @@ public class VirtualOpponent extends Player implements Opponent {
 
         Random random = new Random();
         index = random.nextInt(listRandom.size());
-        System.out.println(listRandom.size());
 
         int[] data = {listRandom.get(index).get(0), listRandom.get(index).get(1)};
         return data;
@@ -85,7 +84,6 @@ public class VirtualOpponent extends Player implements Opponent {
 
         Random random = new Random();
         index = random.nextInt(listRandom.size());
-        System.out.println(listRandom.size());
 
         int[] data = {listRandom.get(index).get(0), listRandom.get(index).get(1)};
         listRandom.remove(index);
