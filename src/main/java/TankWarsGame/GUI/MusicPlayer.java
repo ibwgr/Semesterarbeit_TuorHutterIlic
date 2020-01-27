@@ -5,24 +5,17 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import java.io.File;
 
-public class Music {
-    /*String path;
-
-    public Music(String pathToMusic){
-        this.path = pathToMusic;
-    }*/
+public class MusicPlayer {
 
     public static void playMusic(String path)
     {
         try {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(new File(path)));
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-20.0f);
             clip.start();
-
-            /*FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)
-            gainControl.setValue(0.5f);
-            Thread.sleep(clip.getMicrosecondLength());
-            */}
+        }
         catch (Exception e) {
         }
     }
@@ -32,6 +25,8 @@ public class Music {
         try {
             Clip clip = AudioSystem.getClip();
             clip.open(AudioSystem.getAudioInputStream(new File(path)));
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(-10.0f);
             clip.start();
             clip.loop(clip.LOOP_CONTINUOUSLY);
         }

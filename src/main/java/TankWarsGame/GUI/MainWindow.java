@@ -3,8 +3,6 @@ package TankWarsGame.GUI;
 import TankWarsGame.Field.Cell;
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
-import TankWarsGame.Field.FieldStatus;
-import TankWarsGame.Player.*;
 import TankWarsGame.GameLogic.GameLogic;
 import TankWarsGame.GameLogic.GameSequencer;
 import TankWarsGame.Player.Attack;
@@ -25,17 +23,14 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static TankWarsGame.GUI.Music.playMusic;
+import static TankWarsGame.GUI.MusicPlayer.playMusic;
 
 
 public class MainWindow extends Application {
@@ -268,10 +263,10 @@ public class MainWindow extends Application {
                 }
                 System.out.println("Player: " + ownGameScore.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + opponentGameScore.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
                 if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
-                    System.out.println("You win");
+                    System.out.println("You win"); //TODO Rade Ende des Games initiieren
                     playMusic("./sounds/winner.wav");
                 } else if (opponentGameScore.intValue() == StartScreen.numberOfTanks) {
-                    System.out.println("You loose");
+                    System.out.println("You loose"); //TODO Rade Ende des Games initiieren
                     playMusic("./sounds/looser.wav");
                 }
 
