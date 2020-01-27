@@ -288,6 +288,7 @@ public class StartScreen extends Application {
         Scene tankWars = new Scene(startGameGrid, 1200, 700);
         // set the scene
         s.setScene(tankWars);
+        s.setResizable(false);
         s.show();
     }
 }

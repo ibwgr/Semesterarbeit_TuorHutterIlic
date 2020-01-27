@@ -294,7 +294,7 @@ public class MainWindow extends Application {
         leftCentreRegion.getChildren().addAll(ownField);   /* add grid pane fields to centre region */
 
         VBox rightCentreRegion = new VBox();
-        rightCentreRegion.setPadding((new Insets(12, 15, 12, 95)));
+        rightCentreRegion.setPadding((new Insets(12, 15, 12, 100)));
         rightCentreRegion.setSpacing(10);
         rightCentreRegion.getChildren().addAll(opponentField);
 
@@ -302,6 +302,7 @@ public class MainWindow extends Application {
         HBox centreRegion = new HBox();
         centreRegion.setPadding((new Insets(12, 15, 12, 15)));
         centreRegion.setSpacing(10);
+        centreRegion.setAlignment(Pos.CENTER);
         centreRegion.getChildren().addAll(leftCentreRegion, rightCentreRegion); /* add grid pane fields to centre region */
 
 
@@ -446,6 +447,7 @@ public class MainWindow extends Application {
         window = primaryStage;
         window.setScene(createScene());
         window.setTitle("TANK WARS");
+        window.setResizable(false);
         window.show();
         }
 

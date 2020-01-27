@@ -178,6 +178,7 @@ public class IpWindow extends Application {
         ipwindow = primaryStage;
         ipwindow.setScene(createScene());
         ipwindow.setTitle("TANK WARS");
+        ipwindow.setResizable(false);
         ipwindow.show();
 
 
