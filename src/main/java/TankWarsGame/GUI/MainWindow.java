@@ -189,8 +189,7 @@ public class MainWindow extends Application {
 
 
             //Place tanks randomly on opponent field
-            List<List<Integer>> attackPos = bot.createAttackOptions(fieldcount);
-            bot.setAttackOptions(attackPos);
+            bot.setAttackOptions(fieldcount);
             for (int i = 0; i < StartScreen.numberOfTanks; i++) {
                 int[] positionTanks = bot.getRandom();
                 try {
@@ -227,8 +226,7 @@ public class MainWindow extends Application {
         /*********************************
          * opponent turn
          * */
-        List<List<Integer>> attackPos2 = bot.createAttackOptions(fieldcount);
-        bot.setAttackOptions(attackPos2);
+        bot.setAttackOptions(fieldcount);
         opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
             if ( getOpponentPlayerTurn()){
                     int[] virtualAttack = bot.getRandom();
