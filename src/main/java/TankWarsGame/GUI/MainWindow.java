@@ -440,8 +440,9 @@ public class MainWindow extends Application {
         mainView.setBottom(gridpaneBottom);
         mainView.getBottom().prefHeight(250);
 
-        // start game logic
+        // start game logic thread
         GameLogic game = new GameLogic();
+        game.setDaemon(true);
         game.start();
 
         Scene scene;

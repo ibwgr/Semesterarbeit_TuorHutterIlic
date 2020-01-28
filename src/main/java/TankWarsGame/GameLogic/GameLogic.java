@@ -54,6 +54,7 @@ public class GameLogic extends Thread {
 
 
                 case GAME_OWER:
+                    System.out.println("game is over");
                     gameRunning = false;
                     break;
             }
