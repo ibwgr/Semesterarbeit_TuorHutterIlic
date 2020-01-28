@@ -23,4 +23,11 @@ public class OwnPlayer extends Player {
 
         return super.field.attackField(attack);
     }
+
+
+    @Override
+    public Attack getAttack() {
+        Attack attack = new Attack(0,0);
+        return attack;
+    }
 }

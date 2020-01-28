@@ -2,6 +2,8 @@ package TankWarsGame.Player;
 
 import TankWarsGame.Field.Field;
 import TankWarsGame.GUI.MainWindow;
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+import sun.applet.Main;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,9 +22,11 @@ public class RealOpponent extends Player implements Opponent {
 
     @Override
     public Attack attackField(Attack attack) throws OutOfBoundsException {
+        System.out.println(MainWindow.opponentHostAddress.toString());
+        System.out.println(MainWindow.opponentPort);
         Attack returnAttack = null;
         try (
-                Socket opponentSocket = new Socket(MainWindow.opponentHostAddress, 63211);
+                Socket opponentSocket = new Socket(MainWindow.opponentHostAddress, MainWindow.opponentPort);
                 ObjectOutputStream toServerOpponent = new ObjectOutputStream(opponentSocket.getOutputStream());
                 ObjectInputStream fromServerOpponent = new ObjectInputStream(opponentSocket.getInputStream());
         ) {
@@ -48,8 +52,9 @@ public class RealOpponent extends Player implements Opponent {
     @Override
     public Attack getAttack() {
         Attack returnAttack = null;
+        System.out.println(MainWindow.ownPort);
         try (
-                ServerSocket opponentServer = new ServerSocket(MainWindow.port);
+                ServerSocket opponentServer = new ServerSocket(MainWindow.ownPort);
                 Socket socket = opponentServer.accept();                                  // Client Verbindung akzeptieren
                 ObjectInputStream fromOpponent = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream toOpponent = new ObjectOutputStream(socket.getOutputStream());
