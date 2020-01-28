@@ -12,7 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-public class RealOpponent extends Player implements Opponent {
+public class RealOpponent extends Player {
     private Player ownPlayer;
 
     public RealOpponent(String name, Field opponentField, Player ownPlayer){

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class VirtualOpponent extends Player implements Opponent {
+public class VirtualOpponent extends Player {
     private Attack attack;
     private int fieldcount;
     List<List<Integer>> listRandom;

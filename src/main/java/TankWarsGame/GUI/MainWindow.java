@@ -412,7 +412,7 @@ public class MainWindow extends Application {
          * Cancel Button *
          * */
         buttonCancelMain.setOnMouseClicked(mouseEvent -> {
-            GameLogic.gameSequencer = GameSequencer.GAME_OWER;
+            GameLogic.gameSequencer = GameSequencer.GAME_OWER;      // stop gameLogic Thread
             StartScreen startScreen = new StartScreen();
             try{
                 startScreen.start(window);
@@ -464,12 +464,12 @@ public class MainWindow extends Application {
             opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer );
             System.out.println("gegner 1");
             ownPort = 63211;
-            opponentPort = 63210;
+            opponentPort = 63211;
         }
         else{
             opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer);
             System.out.println("gegner 2");
-            ownPort = 63210;
+            ownPort = 63211;
             opponentPort = 63211;
         }
 
