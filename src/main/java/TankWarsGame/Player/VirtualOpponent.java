@@ -35,7 +35,7 @@ public class VirtualOpponent extends Player implements Opponent {
 
             }
 
-
+        setAttackOptions(fieldcount);
 
 
     }
