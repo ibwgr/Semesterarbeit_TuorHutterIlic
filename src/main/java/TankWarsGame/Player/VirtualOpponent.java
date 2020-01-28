@@ -2,6 +2,7 @@ package TankWarsGame.Player;
 
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
+import TankWarsGame.GUI.StartScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Random;
 
 public class VirtualOpponent extends Player implements Opponent {
     private Attack attack;
+    private int fieldcount;
     List<List<Integer>> listRandom;
 
 
@@ -18,9 +20,24 @@ public class VirtualOpponent extends Player implements Opponent {
      * @param name
      * @param field*/
 
-    public VirtualOpponent(String name, Field field) {
+    public VirtualOpponent(String name, Field field, int fieldcount) {
         // TODO place tanks randomly on field while creating new opponent - Hutti: Method below placeRandom
         super(name, field);
+
+        setAttackOptions(fieldcount);
+
+        for (int i = 0; i < StartScreen.numberOfTanks; i++) {
+                int[] positionTanks = this.getRandom();
+                try {
+                    this.field.placeTank(positionTanks[0], positionTanks[1]);
+                } catch (FieldOccupiedException fo) {
+                }
+
+            }
+
+
+
+
     }
 
     /*********************************

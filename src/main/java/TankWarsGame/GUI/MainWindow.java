@@ -5,10 +5,7 @@ import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
 import TankWarsGame.GameLogic.GameLogic;
 import TankWarsGame.GameLogic.GameSequencer;
-import TankWarsGame.Player.Attack;
-import TankWarsGame.Player.OutOfBoundsException;
-import TankWarsGame.Player.OwnPlayer;
-import TankWarsGame.Player.VirtualOpponent;
+import TankWarsGame.Player.*;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -222,7 +219,7 @@ public class MainWindow extends Application {
         /*********************************
          * opponent turn
          * */
-        bot.setAttackOptions(fieldcount);
+
         opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
             if ( getOpponentPlayerTurn()){
 //                    int[] virtualAttack = opponentPlayer.getRandom();
