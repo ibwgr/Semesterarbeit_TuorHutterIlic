@@ -118,7 +118,10 @@ public class MainWindow extends Application {
 
         Cell cell = new Cell();
         cell.setOnMouseClicked(event -> {
-            if ((cell.getFill() != Color.BLACK && cell.getFill() != Color.RED) && !opponentPlayerTurn.get() && opponentField.isGridLinesVisible()) {
+            if (        (cell.getFill() != Color.BLACK && cell.getFill() != Color.RED)
+                    &&  !opponentPlayerTurn.get()
+                    &&  opponentField.isGridLinesVisible()
+                    &&  ( GameLogic.gameSequencer == GameSequencer.OWN_TURN )) {
                 Attack attack = new Attack(horizontal, vertical);
                 // attack opponent
                 try {
@@ -210,6 +213,19 @@ public class MainWindow extends Application {
         tanksPlaced.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 startupDone = true;
+
+                // single player
+                if ( playerChoice == 0 ) {
+                    GameLogic.gameSequencer = GameSequencer.OWN_TURN;
+                    opponentPlayerTurn.set(false);
+
+                }
+                // multiplayer (my turn)
+                else {
+                    GameLogic.gameSequencer = GameSequencer.CHECK_IF_OPPONENT_IS_WAITING_FOR_CONNECTION;
+                    opponentPlayerTurn.set(false);
+                }
+
             }
             opponentField.setStyle("-fx-background-color: white;");
             opponentField.setGridLinesVisible(true);
@@ -269,30 +285,28 @@ public class MainWindow extends Application {
                     System.out.println("You loose"); //TODO Rade Ende des Games initiieren
                     playMusic("./sounds/looser.wav");
                 }
-
-
                 opponentPlayerTurn.set(false);
-                GameLogic.gameSequencer = GameSequencer.CHECK_IF_LOST_AFTER_OPPONENT_TURN;
             }
+
 
 
 
         });
 
-        // single player
-        if ( playerChoice == 0 ) {
-            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
-            opponentPlayerTurn.set(false);
-
-        }
-        // multiplayer (my turn)
-        else if(playerChoice == 1){
-            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
-            opponentPlayerTurn.set(false);
-
-        // multiplayer (opponent turn)
-        }else if( playerChoice == 2)
-            GameLogic.gameSequencer = GameSequencer.SET_OPPONENT_TURN;
+//        // single player
+//        if ( playerChoice == 0 ) {
+//            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
+//            opponentPlayerTurn.set(false);
+//
+//        }
+//        // multiplayer (my turn)
+//        else if(playerChoice == 1){
+//            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
+//            opponentPlayerTurn.set(false);
+//
+//        // multiplayer (opponent turn)
+//        }else if( playerChoice == 2)
+//            GameLogic.gameSequencer = GameSequencer.SET_OPPONENT_TURN;
 
 
         /*********************************
@@ -453,6 +467,8 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        GameLogic.gameSequencer = GameSequencer.INIT;
 
         if ( playerChoice == 0 ) {
             opponentPlayer = new VirtualOpponent("Bot", opponentMatchfield, fieldcount);
