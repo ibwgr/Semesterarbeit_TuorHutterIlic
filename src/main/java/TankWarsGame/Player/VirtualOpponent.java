@@ -29,7 +29,9 @@ public class VirtualOpponent extends Player implements Opponent {
     @Override
     public Attack getAttack() {
         // TODO implement logic to create random attacks - Hutti: same Method as for place tanks randomly
-        return null;
+                 int[] virtualAttack = getRandom();
+                   Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+        return attackBot;
     }
 
     @Override

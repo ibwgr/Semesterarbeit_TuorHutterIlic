@@ -1,6 +1,8 @@
 package TankWarsGame.Player;
 
-public class Attack {
+import java.io.Serializable;
+
+public class Attack implements Serializable {
     private AttackStatus attackStatus;
     private int horizontalPosition;
     private int verticalPosition;

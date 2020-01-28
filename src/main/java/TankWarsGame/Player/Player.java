@@ -25,7 +25,7 @@ public abstract class Player {
      * abstract methods
      **/
     public abstract Attack attackField(Attack attack) throws OutOfBoundsException;
-
+    public abstract Attack getAttack();
 
     /*********************************
      * methods

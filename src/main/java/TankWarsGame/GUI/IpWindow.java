@@ -128,7 +128,11 @@ public class IpWindow extends Application {
         buttonConnect.setOnMouseClicked(mouseEvent -> {
             label:
             try {
-                enemyIpAdress = String.valueOf(textfieldEnemyIp);
+                System.out.println(textfieldEnemyIp.getCharacters().toString());
+                MainWindow.opponentHostAddress = textfieldEnemyIp.getCharacters().toString();
+                StartScreen.numberOfTanks = 5;
+                StartScreen.numberOfCells = 10;
+                MainWindow.playerChoice = playerChoice;
                 System.out.println(playerChoice);
                 MainWindow screen = new MainWindow();
                screen.start(ipwindow);

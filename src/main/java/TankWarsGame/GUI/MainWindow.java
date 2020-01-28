@@ -41,8 +41,11 @@ public class MainWindow extends Application {
     private static int numberOfTanksToPlace;                                    // number of tanks to place
     private static AtomicInteger ownGameScore = new AtomicInteger(0);
     private static AtomicInteger opponentGameScore = new AtomicInteger(0);
+    public static int playerChoice;                                             // 0 = singleplayer , 1 = multiplayer Player 1, 2= multiplayer Player 2
     public static String opponentHostAddress;                                   //server address
-    public static int port;                                                     // Port-number
+    public static int ownPort;                                                  // Port-number
+    public static int opponentPort;                                             // Port-number
+
 
 
     private boolean startupDone = false;
@@ -63,8 +66,9 @@ public class MainWindow extends Application {
     Field opponentMatchfield = new Field(fieldcount,fieldcount);
 
     //create player
-    OwnPlayer ownPlayer = new OwnPlayer("philipp",ownMatchfield );
-    VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield);
+    OwnPlayer ownPlayer = new OwnPlayer("Master",ownMatchfield );
+    Player opponentPlayer;
+    //VirtualOpponent bot = new VirtualOpponent("Bot", opponentMatchfield, fieldcount);
 
     // Define a variable to store the opponentPlayerTurn property
     private static BooleanProperty opponentPlayerTurn = new SimpleBooleanProperty();
@@ -121,7 +125,7 @@ public class MainWindow extends Application {
                 Attack attack = new Attack(horizontal, vertical);
                 // attack opponent
                 try {
-                    attack = bot.attackField(attack);
+                    attack = opponentPlayer.attackField(attack);
                     playMusic("./sounds/shot.wav");
                 } catch (OutOfBoundsException oob) {
                 }
@@ -185,20 +189,16 @@ public class MainWindow extends Application {
 
 
             //Place tanks randomly on opponent field
-            bot.setAttackOptions(fieldcount);
-            for (int i = 0; i < StartScreen.numberOfTanks; i++) {
-                int[] positionTanks = bot.getRandom();
-                try {
-                    bot.field.placeTank(positionTanks[0], positionTanks[1]);
-                } catch (FieldOccupiedException fo) {
-                }
-                // TODO only for test reasons, delete after
-                //Cell cellsRandoms = createOpponentCell(positionTanks[0], positionTanks[1]);
-                //opponentField.add(cellsRandoms, positionTanks[0], positionTanks[1]);
-                //cellsRandoms.setFill(Color.RED);
-                //cellsRandoms.setStroke(Color.ORANGE);
-                // TODO end of deletable test code
-            }
+        // TODO check if necessary ptuor
+
+//            for (int i = 0; i < StartScreen.numberOfTanks; i++) {
+//                int[] positionTanks = bot.getPosRandom();
+//                try {
+//                    bot.field.placeTank(positionTanks[0], positionTanks[1]);
+//                } catch (FieldOccupiedException fo) {
+//                }
+//
+//            }
 
 
 
@@ -225,8 +225,10 @@ public class MainWindow extends Application {
         bot.setAttackOptions(fieldcount);
         opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
             if ( getOpponentPlayerTurn()){
-                    int[] virtualAttack = bot.getRandom();
-                    Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+//                    int[] virtualAttack = opponentPlayer.getRandom();
+//                    Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+
+                    Attack attackBot = opponentPlayer.getAttack();
 
                     try {
                         attackBot = ownPlayer.attackField(attackBot);
@@ -234,31 +236,31 @@ public class MainWindow extends Application {
                     } catch (OutOfBoundsException oob) {
                     }
 
-                    ObservableList<Node> childrens = ownField.getChildren();
-                    for (Node node : childrens)
-                        if (ownField.getRowIndex(node) == virtualAttack[1] && ownField.getColumnIndex(node) == virtualAttack[0]) {
-                            Cell cell1 = new Cell();
-                            cell1 = (Cell) node;
-                            if (cell1.getFill() == Color.GREEN) {
-                                cell1.setFill(Color.RED);
-                            } else {
-                                cell1.setFill(Color.BLACK);
-                            }
-
-                            break;
+                ObservableList<Node> childrens = ownField.getChildren();
+                for (Node node : childrens)
+                    if ((ownField.getRowIndex(node) ==  attackBot.getVerticalPosition()) && (ownField.getColumnIndex(node) == attackBot.getHorizontalPosition())) {
+                        Cell cell1 = new Cell();
+                        cell1 = (Cell) node;
+                        if (cell1.getFill() == Color.GREEN) {
+                            cell1.setFill(Color.RED);
+                        } else {
+                            cell1.setFill(Color.BLACK);
                         }
 
-                    switch (attackBot.getAttackStatus()) {
-                        case SUCCESSFUL:
-                            //cell.setFill(Color.BLUE);
-                            opponentGameScore.getAndIncrement();
-                            break;
-                        case UNSUCCESSFUL:
-                            //cell.setFill(Color.BLACK);
+                        break;
                     }
 
+                switch (attackBot.getAttackStatus()) {
+                    case SUCCESSFUL:
+                        //cell.setFill(Color.BLUE);
+                        opponentGameScore.getAndIncrement();
+                        break;
+                    case UNSUCCESSFUL:
+                        //cell.setFill(Color.BLACK);
+                }
+
                     // TODO only for test reasons --> delete if not needed anymore
-                    System.out.println("Bot has fired: H:" + virtualAttack[0] + " V:" + virtualAttack[1] + " " + attackBot.getAttackStatus());
+                    System.out.println("Bot has fired: H:" + attackBot.getHorizontalPosition() + " V:" + attackBot.getVerticalPosition() + " " + attackBot.getAttackStatus());
                     // TODO <-- END of deletable stuff
                 }
                 System.out.println("Player: " + ownGameScore.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + opponentGameScore.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
@@ -278,9 +280,20 @@ public class MainWindow extends Application {
 
         });
 
+        // single player
+        if ( playerChoice == 0 ) {
+            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
+            opponentPlayerTurn.set(false);
 
+        }
+        // multiplayer (my turn)
+        else if(playerChoice == 1){
+            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
+            opponentPlayerTurn.set(false);
 
-
+        // multiplayer (opponent turn)
+        }else if( playerChoice == 2)
+            GameLogic.gameSequencer = GameSequencer.SET_OPPONENT_TURN;
 
 
         /*********************************
@@ -428,8 +441,6 @@ public class MainWindow extends Application {
         mainView.getBottom().prefHeight(250);
 
         // start game logic
-        GameLogic.gameSequencer = GameSequencer.OWN_TURN;
-        opponentPlayerTurn.set(false);
         GameLogic game = new GameLogic();
         game.start();
 
@@ -441,6 +452,25 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        if ( playerChoice == 0 ) {
+            opponentPlayer = new VirtualOpponent("Bot", opponentMatchfield, fieldcount);
+            System.out.println("bot");
+
+        }
+        //client
+        else if(playerChoice == 1){
+            opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer );
+            System.out.println("gegner 1");
+            ownPort = 63211;
+            opponentPort = 63210;
+        }
+        else{
+            opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer);
+            System.out.println("gegner 2");
+            ownPort = 63210;
+            opponentPort = 63211;
+        }
 
         window = primaryStage;
         window.setScene(createScene());

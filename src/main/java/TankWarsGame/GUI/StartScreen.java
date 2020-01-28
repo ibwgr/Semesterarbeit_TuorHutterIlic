@@ -245,6 +245,7 @@ public class StartScreen extends Application {
 /*******************************************************************************/
             buttonPlay.setOnMouseClicked((event) -> {
                 if(Objects.equals(modeSelected,"Singleplayer")) {
+                    MainWindow.playerChoice = 0;
                     MainWindow screen = new MainWindow();
                     try {
                         screen.start(s);
