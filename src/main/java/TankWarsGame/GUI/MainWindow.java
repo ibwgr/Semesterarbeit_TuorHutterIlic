@@ -139,10 +139,12 @@ public class MainWindow extends Application {
                     case UNSUCCESSFUL:
                         cell.setFill(Color.BLACK);
                 }
-
+                
+                System.out.println("Player: " + ownGameScore.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + opponentGameScore.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
+                GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
             }
 
-            GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
+
         });
         return cell;
     }
@@ -259,7 +261,6 @@ public class MainWindow extends Application {
                     // TODO only for test reasons --> delete if not needed anymore
                     System.out.println("Bot has fired: H:" + attackBot.getHorizontalPosition() + " V:" + attackBot.getVerticalPosition() + " " + attackBot.getAttackStatus());
                     // TODO <-- END of deletable stuff
-                }
                 System.out.println("Player: " + ownGameScore.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + opponentGameScore.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
                 if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
                     System.out.println("You win"); //TODO Rade Ende des Games initiieren
@@ -272,6 +273,7 @@ public class MainWindow extends Application {
 
                 opponentPlayerTurn.set(false);
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_LOST_AFTER_OPPONENT_TURN;
+            }
 
 
 
@@ -410,6 +412,7 @@ public class MainWindow extends Application {
          * Cancel Button *
          * */
         buttonCancelMain.setOnMouseClicked(mouseEvent -> {
+            GameLogic.gameSequencer = GameSequencer.GAME_OWER;
             StartScreen startScreen = new StartScreen();
             try{
                 startScreen.start(window);
