@@ -1,9 +1,7 @@
-package TankWarsGame.Player;
+package TankWarsGame.PlayerComponents;
 
 import TankWarsGame.Field.Field;
-import TankWarsGame.GUI.MainWindow;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
-import sun.applet.Main;
+import TankWarsGame.GUI.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,12 +10,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
+
 public class RealOpponent extends Player {
     private Player ownPlayer;
 
     public RealOpponent(String name, Field opponentField, Player ownPlayer){
         super(name, opponentField);
-        this.ownPlayer = ownPlayer;
+        ownPlayer = ownPlayer;
     }
 
     @Override
@@ -69,7 +68,7 @@ public class RealOpponent extends Player {
             System.out.println("objekt erhalten");
 
             // update attackStatus
-            switch (this.ownPlayer.getFieldStatus(recievedAttack.getHorizontalPosition(),recievedAttack.getVerticalPosition())) {
+            switch (ownPlayer.getFieldStatus(recievedAttack.getHorizontalPosition(),recievedAttack.getVerticalPosition())) {
                 case TANK:
                     recievedAttack.setAttackStatus(AttackStatus.SUCCESSFUL);
                     break;

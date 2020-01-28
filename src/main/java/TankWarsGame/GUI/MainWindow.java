@@ -5,7 +5,7 @@ import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
 import TankWarsGame.GameLogic.GameLogic;
 import TankWarsGame.GameLogic.GameSequencer;
-import TankWarsGame.Player.*;
+import TankWarsGame.PlayerComponents.*;
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;

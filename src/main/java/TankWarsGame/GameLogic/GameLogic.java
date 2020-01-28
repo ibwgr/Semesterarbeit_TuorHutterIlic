@@ -2,7 +2,6 @@ package TankWarsGame.GameLogic;
 
 import TankWarsGame.GUI.MainWindow;
 import TankWarsGame.GUI.StartScreen;
-import TankWarsGame.Player.Attack;
 
 import java.io.*;
 import java.net.ServerSocket;

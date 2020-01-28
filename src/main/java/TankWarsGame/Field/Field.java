@@ -1,7 +1,7 @@
 package TankWarsGame.Field;
 
-import TankWarsGame.Player.Attack;
-import TankWarsGame.Player.AttackStatus;
+import TankWarsGame.PlayerComponents.Attack;
+import TankWarsGame.PlayerComponents.AttackStatus;
 
 public class Field {
     private FieldStatus[][] field;

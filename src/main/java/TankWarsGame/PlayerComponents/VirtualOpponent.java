@@ -1,4 +1,4 @@
-package TankWarsGame.Player;
+package TankWarsGame.PlayerComponents;
 
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldOccupiedException;
