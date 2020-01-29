@@ -43,6 +43,7 @@ public class GameLogic extends Thread {
                             PrintWriter toServerOpponent = new PrintWriter(opponentSocket.getOutputStream(),true);
                     ) {
                         // if no error occurred, the connection to the opponent could be established, game starts with own turn
+                        toServerOpponent.println("connect");
                         MainWindow.setOpponentTurn(false);
                         gameSequencer = GameSequencer.OWN_TURN;
 
