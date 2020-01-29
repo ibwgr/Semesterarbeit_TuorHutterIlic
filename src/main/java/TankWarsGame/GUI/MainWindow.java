@@ -141,8 +141,6 @@ public class MainWindow extends Application {
 
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
             }
-
-
         });
         return cell;
     }
