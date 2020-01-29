@@ -29,7 +29,6 @@ import java.util.Objects;
 
 public class IpWindow extends Application {
 
-    public static String enemyIpAdress; //TODO Philipp use this variable
     public static int playerChoice;
     // main window
     Stage ipwindow;
@@ -88,15 +87,12 @@ public class IpWindow extends Application {
         imageviewTank.setFitHeight(200);
         gridpaneIpSetting.getChildren().add(imageviewTank);
 
-        ComboBox<String> comboBoxPlayer = new ComboBox<>();
-        comboBoxPlayer.getItems().addAll("Player 1", "Player 2");
-        comboBoxPlayer.setPrefSize(500, 40);
-        comboBoxPlayer.setPromptText("Choose a Player your enemy must choose the oposite:");
 
         /*******************************************************************************/
         //gridpane add children and place
         /*******************************************************************************/
-        gridpaneIpSetting.getChildren().addAll(textfieldEnemyIp, textfieldOwnIp, labelEnemyConnect, labelOwn, buttonConnect, buttonIpCancel, comboBoxPlayer);
+        gridpaneIpSetting.getChildren().addAll(textfieldEnemyIp, textfieldOwnIp, labelEnemyConnect, labelOwn, buttonConnect, buttonIpCancel);
+
 
         GridPane.setConstraints(labelEnemyConnect, 0,0);
         GridPane.setHalignment(labelEnemyConnect, HPos.LEFT);
@@ -110,8 +106,8 @@ public class IpWindow extends Application {
         GridPane.setConstraints(textfieldOwnIp, 0, 3);
         GridPane.setHalignment(textfieldOwnIp, HPos.CENTER);
 
-        GridPane.setConstraints(comboBoxPlayer, 0,5);
-        GridPane.setHalignment(comboBoxPlayer, HPos.LEFT);
+//        GridPane.setConstraints(comboBoxPlayer, 0,5);
+//        GridPane.setHalignment(comboBoxPlayer, HPos.LEFT);
 
         GridPane.setConstraints(buttonConnect, 0,6);
         GridPane.setHalignment(buttonConnect, HPos.LEFT);
@@ -128,12 +124,9 @@ public class IpWindow extends Application {
         buttonConnect.setOnMouseClicked(mouseEvent -> {
             label:
             try {
-                System.out.println(textfieldEnemyIp.getCharacters().toString());
-                MainWindow.opponentHostAddress = textfieldEnemyIp.getCharacters().toString();
-                StartScreen.numberOfTanks = 5;
-                StartScreen.numberOfCells = 10;
-                MainWindow.playerChoice = playerChoice;
-                System.out.println(playerChoice);
+                MainWindow.opponentHostAddress = textfieldEnemyIp.getCharacters().toString();           // set opponent host ip address
+                StartScreen.numberOfTanks = 5;                                                          // set default number of tanks to place, could not be changed in multi player mode
+                StartScreen.numberOfCells = 10;                                                         // set default field size, could not be changed in multi player mode
                 MainWindow screen = new MainWindow();
                screen.start(ipwindow);
             } catch (Exception e) {
@@ -142,21 +135,7 @@ public class IpWindow extends Application {
             }
         });
 
-        /*******************************************************************************/
-        //Combobox and connect listener
-        /*******************************************************************************/
-        comboBoxPlayer.valueProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                if (Objects.equals(t1, "Player 1")) {
-                    playerChoice = 1;
-                } else if (Objects.equals(t1, "Player 2")) {
-                    playerChoice = 2;
-                } else {
-                    playerChoice = 0;
-                }
-            }
-        });
+
 
         /*******************************************************************************/
         // Cancel Button (Restart)
@@ -184,7 +163,6 @@ public class IpWindow extends Application {
         ipwindow.setTitle("TANK WARS");
         ipwindow.setResizable(false);
         ipwindow.show();
-
 
     }
 

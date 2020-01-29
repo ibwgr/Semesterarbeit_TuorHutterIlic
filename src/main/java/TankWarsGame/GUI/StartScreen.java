@@ -245,7 +245,7 @@ public class StartScreen extends Application {
 /*******************************************************************************/
             buttonPlay.setOnMouseClicked((event) -> {
                 if(Objects.equals(modeSelected,"Singleplayer")) {
-                    MainWindow.playerChoice = 0;
+                    MainWindow.modeSelect = 0;
                     MainWindow screen = new MainWindow();
                     try {
                         screen.start(s);
@@ -255,6 +255,7 @@ public class StartScreen extends Application {
                     }
                 }
                 else if (Objects.equals(modeSelected, "Multiplayer")){
+                    MainWindow.modeSelect = 1;
                     IpWindow screen = new IpWindow();
                     try {
                         screen.start(s);

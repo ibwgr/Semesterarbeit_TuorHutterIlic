@@ -38,16 +38,15 @@ public class MainWindow extends Application {
     private static int numberOfTanksToPlace;                                    // number of tanks to place
     private static AtomicInteger ownGameScore = new AtomicInteger(0);
     private static AtomicInteger opponentGameScore = new AtomicInteger(0);
-    public static int playerChoice;                                             // 0 = singleplayer , 1 = multiplayer Player 1, 2= multiplayer Player 2
+    public static int modeSelect;                                               // 0 = singleplayer , 1 = multiplayer Player
     public static String opponentHostAddress;                                   //server address
-    public static int ownPort;                                                  // Port-number
-    public static int opponentPort;                                             // Port-number
+    public static int Port = 63211;;                                            // Port-number
 
 
 
     private boolean startupDone = false;
 
-    final int fieldcount = StartScreen.numberOfCells; // TODO Rade - Replace 10 with Fx-variable for field size
+    final int fieldcount = StartScreen.numberOfCells;
 
 
     // BooleanProperty to check if all the tanks have been placed
@@ -130,9 +129,6 @@ public class MainWindow extends Application {
                 } catch (OutOfBoundsException oob) {
                 }
 
-                // TODO only for test reasons --> delete if not needed anymore
-                System.out.println("You have fired: H:" + horizontal + " V:" + vertical + " " + attack.getAttackStatus());
-                // TODO <-- END of deletable stuff
 
                 switch (attack.getAttackStatus()) {
                     case SUCCESSFUL:
@@ -142,8 +138,7 @@ public class MainWindow extends Application {
                     case UNSUCCESSFUL:
                         cell.setFill(Color.BLACK);
                 }
-                
-                System.out.println("Player: " + ownGameScore.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + opponentGameScore.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
+
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
             }
 
@@ -190,20 +185,6 @@ public class MainWindow extends Application {
         }
 
 
-            //Place tanks randomly on opponent field
-        // TODO check if necessary ptuor
-
-//            for (int i = 0; i < StartScreen.numberOfTanks; i++) {
-//                int[] positionTanks = bot.getPosRandom();
-//                try {
-//                    bot.field.placeTank(positionTanks[0], positionTanks[1]);
-//                } catch (FieldOccupiedException fo) {
-//                }
-//
-//            }
-
-
-
         /*********************************
          * check iff all own tanks have been placed
          * show opponent field as soon all own tanks have been placed
@@ -215,7 +196,7 @@ public class MainWindow extends Application {
                 startupDone = true;
 
                 // single player
-                if ( playerChoice == 0 ) {
+                if ( modeSelect == 0 ) {
                     GameLogic.gameSequencer = GameSequencer.OWN_TURN;
                     opponentPlayerTurn.set(false);
 
@@ -274,10 +255,6 @@ public class MainWindow extends Application {
                         //cell.setFill(Color.BLACK);
                 }
 
-                    // TODO only for test reasons --> delete if not needed anymore
-                    System.out.println("Bot has fired: H:" + attackBot.getHorizontalPosition() + " V:" + attackBot.getVerticalPosition() + " " + attackBot.getAttackStatus());
-                    // TODO <-- END of deletable stuff
-                System.out.println("Player: " + ownGameScore.intValue() + "/" + StartScreen.numberOfTanks + " Bot: " + opponentGameScore.intValue() + "/" + StartScreen.numberOfTanks); //TODO only for test reasons
                 if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
                     System.out.println("You win"); //TODO Rade Ende des Games initiieren
                     playMusic("./sounds/winner.wav");
@@ -293,20 +270,6 @@ public class MainWindow extends Application {
 
         });
 
-//        // single player
-//        if ( playerChoice == 0 ) {
-//            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
-//            opponentPlayerTurn.set(false);
-//
-//        }
-//        // multiplayer (my turn)
-//        else if(playerChoice == 1){
-//            GameLogic.gameSequencer = GameSequencer.OWN_TURN;
-//            opponentPlayerTurn.set(false);
-//
-//        // multiplayer (opponent turn)
-//        }else if( playerChoice == 2)
-//            GameLogic.gameSequencer = GameSequencer.SET_OPPONENT_TURN;
 
 
         /*********************************
@@ -470,23 +433,14 @@ public class MainWindow extends Application {
 
         GameLogic.gameSequencer = GameSequencer.INIT;
 
-        if ( playerChoice == 0 ) {
+        // single player
+        if ( modeSelect == 0 ) {
             opponentPlayer = new VirtualOpponent("Bot", opponentMatchfield, fieldcount);
-            System.out.println("bot");
 
         }
-        //client
-        else if(playerChoice == 1){
-            opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer );
-            System.out.println("gegner 1");
-            ownPort = 63211;
-            opponentPort = 63211;
-        }
+        // multi player
         else{
             opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer);
-            System.out.println("gegner 2");
-            ownPort = 63211;
-            opponentPort = 63211;
         }
 
         window = primaryStage;

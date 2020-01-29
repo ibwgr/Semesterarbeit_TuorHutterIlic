@@ -30,7 +30,7 @@ public class GameLogic extends Thread {
                 case CHECK_IF_OPPONENT_IS_WAITING_FOR_CONNECTION:
                     // try to connect to opponent
                     try (
-                            Socket opponentSocket = new Socket(MainWindow.opponentHostAddress, MainWindow.opponentPort);
+                            Socket opponentSocket = new Socket(MainWindow.opponentHostAddress, MainWindow.Port);
                             PrintWriter toServerOpponent = new PrintWriter(opponentSocket.getOutputStream(),true);
                     ) {
                         // if no error occurred, the connection to the opponent could be established, game starts with own turn
@@ -47,7 +47,7 @@ public class GameLogic extends Thread {
                 case WAIT_UNTIL_OPPONENT_CONNECTS:
                     // wait until connection from opponent has been accepted
                     try (
-                            ServerSocket opponentServer = new ServerSocket(MainWindow.ownPort);
+                            ServerSocket opponentServer = new ServerSocket(MainWindow.Port);
                             Socket socket = opponentServer.accept();
                             BufferedReader fromServerOpponent = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     ) {
@@ -71,6 +71,7 @@ public class GameLogic extends Thread {
                     // check if game is finished after own turn
                     if (MainWindow.getOwnScore().intValue() == StartScreen.numberOfTanks) {
                         // game is finished, stop gameSequencer Thread
+                        System.out.println("you win");
                         gameSequencer = GameSequencer.GAME_OWER;
                     }else{
                         gameSequencer = GameSequencer.SET_OPPONENT_TURN;
@@ -97,6 +98,7 @@ public class GameLogic extends Thread {
                     // check if game is finished after opponent turn
                     if (MainWindow.getOpponentScore().intValue() == StartScreen.numberOfTanks) {
                         // game is finished, stop gameSequencer Thread
+                        System.out.println("you lose");
                         gameSequencer = GameSequencer.GAME_OWER;
                     }else{
                         gameSequencer = GameSequencer.OWN_TURN;

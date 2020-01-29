@@ -21,9 +21,8 @@ public class VirtualOpponent extends Player {
      * @param field*/
 
     public VirtualOpponent(String name, Field field, int fieldcount) {
-        // TODO place tanks randomly on field while creating new opponent - Hutti: Method below placeRandom
         super(name, field);
-
+        // setAttackOptions -> this makes sure that the tanks could not be placed randomly at the same position
         setAttackOptions(fieldcount);
 
         for (int i = 0; i < StartScreen.numberOfTanks; i++) {
@@ -31,23 +30,23 @@ public class VirtualOpponent extends Player {
                 try {
                     this.field.placeTank(positionTanks[0], positionTanks[1]);
                 } catch (FieldOccupiedException fo) {
+                    System.out.println(fo.fillInStackTrace());
                 }
-
             }
 
+        // reset AttackOptions after placing tanks randomly -> this makes sure that not the same cell is attacked twice
         setAttackOptions(fieldcount);
-
-
     }
+
 
     /*********************************
      * override abstract methods
      */
     @Override
     public Attack getAttack() {
-        // TODO implement logic to create random attacks - Hutti: same Method as for place tanks randomly
-                 int[] virtualAttack = getRandom();
-                   Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+        // create random attack from getRandom() method
+        int[] virtualAttack = getRandom();
+        Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
         return attackBot;
     }
 
@@ -57,14 +56,16 @@ public class VirtualOpponent extends Player {
         this.checkIfInBounds(attack.getHorizontalPosition(), attack.getVerticalPosition());
         this.getFieldStatus(attack.getHorizontalPosition(), attack.getVerticalPosition());
 
-        // TODO attack opponent field - Hutti: Done
-        return super.field.attackField(attack);
         //return attack;
-
+        return super.field.attackField(attack);
     }
 
-    public void setAttackOptions(int fc) {
 
+    /*********************************
+     * set attack options
+     * this make sure that a cell is attacked only once
+     */
+    public void setAttackOptions(int fc) {
             int[][] attackOptions;
             attackOptions = new int[fc * fc][2];
             int c = 0;
@@ -88,8 +89,13 @@ public class VirtualOpponent extends Player {
                 lists.add(list);
             }
         this.listRandom = lists;
-        }
+    }
 
+
+    /*********************************
+     * getRandom
+     * this generates unique random cell positions
+     */
     public int [] getRandom() {
 
         int index;
@@ -99,7 +105,6 @@ public class VirtualOpponent extends Player {
 
         int[] data = {listRandom.get(index).get(0), listRandom.get(index).get(1)};
         listRandom.remove(index);
-        System.out.println(listRandom.size());
         return data;
     }
 }
