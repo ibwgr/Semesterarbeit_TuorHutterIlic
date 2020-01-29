@@ -11,11 +11,20 @@ public class GameLogic extends Thread {
 
     private boolean gameRunning;
     public static GameSequencer gameSequencer;
+
+
+    /*********************************
+     * Constructor
+     * set gameRunning to true while creating a gameLogic Thread
+     **/
     public GameLogic(){
         this.gameRunning = true;
     }
 
 
+    /*********************************
+     * GameLogic run() Method
+     **/
     public void run() {
 
         while (gameRunning){
@@ -23,7 +32,7 @@ public class GameLogic extends Thread {
             switch (gameSequencer){
 
                 case INIT:
-                    // initial state at startup, nothing to do
+                    // initial state at startup
                     break;
 
 
@@ -72,7 +81,7 @@ public class GameLogic extends Thread {
                     if (MainWindow.getOwnScore().intValue() == StartScreen.numberOfTanks) {
                         // game is finished, stop gameSequencer Thread
                         System.out.println("you win");
-                        gameSequencer = GameSequencer.GAME_OWER;
+                        gameSequencer = GameSequencer.GAME_OVER;
                     }else{
                         gameSequencer = GameSequencer.SET_OPPONENT_TURN;
                     }
@@ -99,14 +108,14 @@ public class GameLogic extends Thread {
                     if (MainWindow.getOpponentScore().intValue() == StartScreen.numberOfTanks) {
                         // game is finished, stop gameSequencer Thread
                         System.out.println("you lose");
-                        gameSequencer = GameSequencer.GAME_OWER;
+                        gameSequencer = GameSequencer.GAME_OVER;
                     }else{
                         gameSequencer = GameSequencer.OWN_TURN;
                     }
                     break;
 
 
-                case GAME_OWER:
+                case GAME_OVER:
                     // game is over, stop while loop which also ends this Thread
                     System.out.println("game is over");
                     gameRunning = false;

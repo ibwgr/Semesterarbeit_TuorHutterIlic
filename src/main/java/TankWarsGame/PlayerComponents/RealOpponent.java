@@ -21,7 +21,7 @@ public class RealOpponent extends Player {
 
     @Override
     public Attack attackField(Attack attack) throws OutOfBoundsException {
-        // check if position is within field boundaries - throw out of bounds exception if not inside of the boundraries
+        // check if position is within field boundaries - throw out of bounds exception if not inside of the boundaries
         this.checkIfInBounds(attack.getHorizontalPosition(), attack.getVerticalPosition());
 
         Attack returnAttack = null;

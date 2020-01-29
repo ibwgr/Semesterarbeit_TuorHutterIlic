@@ -8,7 +8,9 @@ public class OwnPlayer extends Player {
      * Constructors
      *
      * @param name
-     * @param field*/
+     * name of the player
+     * @param field
+     * own game field, indicates where the tanks are placed on the field*/
     public OwnPlayer(String name, Field field) {
         super(name, field);
     }

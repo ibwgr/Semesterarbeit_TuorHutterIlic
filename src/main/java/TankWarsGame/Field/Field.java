@@ -8,7 +8,7 @@ public class Field {
 
 
     /*********************************
-     * Constructors
+     * Constructor
      **/
     public Field(int numberOfFieldsHorizontal, int numberOfFieldsVertical){
         // field
