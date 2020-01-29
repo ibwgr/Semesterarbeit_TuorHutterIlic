@@ -13,10 +13,14 @@ import java.net.Socket;
 
 public class RealOpponent extends Player {
     private Player ownPlayer;
+    private String opponentHostAddress;
+    private int port;
 
-    public RealOpponent(String name, Field opponentField, Player ownPlayer){
+    public RealOpponent(String name, Field opponentField, Player ownPlayer, String opponentHostAddress, int port){
         super(name, opponentField);
         this.ownPlayer = ownPlayer;
+        this.opponentHostAddress = opponentHostAddress;
+        this.port = port;
     }
 
     @Override
@@ -26,7 +30,7 @@ public class RealOpponent extends Player {
 
         Attack returnAttack = null;
         try (
-                Socket opponentSocket = new Socket(MainWindow.opponentHostAddress, MainWindow.Port);
+                Socket opponentSocket = new Socket(opponentHostAddress, port);
                 ObjectOutputStream toServerOpponent = new ObjectOutputStream(opponentSocket.getOutputStream());
                 ObjectInputStream fromServerOpponent = new ObjectInputStream(opponentSocket.getInputStream());
         ) {
@@ -47,7 +51,7 @@ public class RealOpponent extends Player {
     public Attack getAttack() {
         Attack returnAttack = null;
         try (
-                ServerSocket opponentServer = new ServerSocket(MainWindow.Port);
+                ServerSocket opponentServer = new ServerSocket(port);
                 Socket socket = opponentServer.accept();                                  // Client Verbindung akzeptieren
                 ObjectInputStream fromOpponent = new ObjectInputStream(socket.getInputStream());
                 ObjectOutputStream toOpponent = new ObjectOutputStream(socket.getOutputStream());

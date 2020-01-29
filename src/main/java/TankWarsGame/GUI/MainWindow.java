@@ -40,7 +40,7 @@ public class MainWindow extends Application {
     private static AtomicInteger opponentGameScore = new AtomicInteger(0);
     public static int modeSelect;                                               // 0 = singleplayer , 1 = multiplayer Player
     public static String opponentHostAddress;                                   //server address
-    public static int Port = 63211;;                                            // Port-number
+    public static int port = 63211;;                                            // Port-number
 
 
 
@@ -430,7 +430,7 @@ public class MainWindow extends Application {
         }
         // multi player
         else{
-            opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer);
+            opponentPlayer = new RealOpponent("gegner", opponentMatchfield, ownPlayer, opponentHostAddress, port);
         }
 
         window = primaryStage;

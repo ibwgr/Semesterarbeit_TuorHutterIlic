@@ -39,7 +39,7 @@ public class GameLogic extends Thread {
                 case CHECK_IF_OPPONENT_IS_WAITING_FOR_CONNECTION:
                     // try to connect to opponent
                     try (
-                            Socket opponentSocket = new Socket(MainWindow.opponentHostAddress, MainWindow.Port);
+                            Socket opponentSocket = new Socket(MainWindow.opponentHostAddress, MainWindow.port);
                             PrintWriter toServerOpponent = new PrintWriter(opponentSocket.getOutputStream(),true);
                     ) {
                         // if no error occurred, the connection to the opponent could be established, game starts with own turn
@@ -56,7 +56,7 @@ public class GameLogic extends Thread {
                 case WAIT_UNTIL_OPPONENT_CONNECTS:
                     // wait until connection from opponent has been accepted
                     try (
-                            ServerSocket opponentServer = new ServerSocket(MainWindow.Port);
+                            ServerSocket opponentServer = new ServerSocket(MainWindow.port);
                             Socket socket = opponentServer.accept();
                             BufferedReader fromServerOpponent = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     ) {
