@@ -32,7 +32,7 @@ public class GameLogic extends Thread {
             switch (gameSequencer){
 
                 case INIT:
-                    // initial state at startup
+                    // initial state at startup - wait until all the own tanks have been placed
                     break;
 
 

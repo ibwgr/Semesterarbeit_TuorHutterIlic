@@ -198,7 +198,7 @@ public class MainWindow extends Application {
                     opponentPlayerTurn.set(false);
 
                 }
-                // multiplayer (my turn)
+                // multi player
                 else {
                     GameLogic.gameSequencer = GameSequencer.CHECK_IF_OPPONENT_IS_WAITING_FOR_CONNECTION;
                     opponentPlayerTurn.set(false);
