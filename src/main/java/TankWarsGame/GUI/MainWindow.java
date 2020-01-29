@@ -248,11 +248,10 @@ public class MainWindow extends Application {
 
                 switch (attackBot.getAttackStatus()) {
                     case SUCCESSFUL:
-                        //cell.setFill(Color.BLUE);
                         opponentGameScore.getAndIncrement();
                         break;
                     case UNSUCCESSFUL:
-                        //cell.setFill(Color.BLACK);
+                        // not successful do not increment game score of opponent
                 }
 
                 if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
