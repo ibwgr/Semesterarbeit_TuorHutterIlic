@@ -90,7 +90,7 @@ public class VirtualOpponent extends Player {
      * getRandom
      * this generates unique random cell positions
      */
-    private int [] getRandom() {
+    public int [] getRandom() {
 
         int index;
 

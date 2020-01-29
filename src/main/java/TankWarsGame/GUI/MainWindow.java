@@ -386,7 +386,7 @@ public class MainWindow extends Application {
          * Cancel Button *
          * */
         buttonCancelMain.setOnMouseClicked(mouseEvent -> {
-            GameLogic.gameSequencer = GameSequencer.GAME_OWER;      // stop gameLogic Thread
+            GameLogic.gameSequencer = GameSequencer.GAME_OVER;      // stop gameLogic Thread
             StartScreen startScreen = new StartScreen();
             try{
                 startScreen.start(window);
