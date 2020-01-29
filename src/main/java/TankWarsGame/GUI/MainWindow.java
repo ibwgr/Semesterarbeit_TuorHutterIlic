@@ -141,8 +141,7 @@ public class MainWindow extends Application {
 
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
             }
-
-
+            
         });
         return cell;
     }
@@ -189,7 +188,6 @@ public class MainWindow extends Application {
          * check iff all own tanks have been placed
          * show opponent field as soon all own tanks have been placed
          * */
-
         tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(StartScreen.numberOfTanks));
         tanksPlaced.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -214,11 +212,9 @@ public class MainWindow extends Application {
 
 
 
-
         /*********************************
          * opponent turn
          * */
-
         opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
             if ( getOpponentPlayerTurn()){
 //                    int[] virtualAttack = opponentPlayer.getRandom();
@@ -263,10 +259,6 @@ public class MainWindow extends Application {
                 }
                 opponentPlayerTurn.set(false);
             }
-
-
-
-
         });
 
 
