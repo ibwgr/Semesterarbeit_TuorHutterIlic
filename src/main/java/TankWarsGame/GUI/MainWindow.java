@@ -395,7 +395,6 @@ public class MainWindow extends Application {
         BorderPane mainView = new BorderPane();
         //set Background
         //TODO Doesn't work yet and buttons/textfields function @rade
-        //TODO make WINDOW NOT RESIZABLE!!!!!!!!!!!!!!!!!!!!@rade
         BackgroundImage backgroundMain = new BackgroundImage(new Image("File:images/backgroundWar.jpg" ,1200,800,false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         //set image on gridpane
