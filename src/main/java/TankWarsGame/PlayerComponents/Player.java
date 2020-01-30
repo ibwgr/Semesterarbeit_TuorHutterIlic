@@ -3,7 +3,7 @@ import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldStatus;
 
 public abstract class Player {
-    public String name;
+    private String name;
     public Field field;
 
     public Player(){
