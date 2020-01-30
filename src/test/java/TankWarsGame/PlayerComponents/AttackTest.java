@@ -1,12 +1,13 @@
-package TankWarsGame.Player;
+package TankWarsGame.PlayerComponents;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AttackTest {
 
+    /*********************************
+     * getHorizontalPosition()
+     **/
     @Test
     void CreateAttack_getHorizontalPosition_equalsShouldBeTrue() {
         Attack attack = new Attack(3, 0);
@@ -25,6 +26,9 @@ class AttackTest {
         Assertions.assertNotEquals(3,resultHorizontalPosition);
     }
 
+    /*********************************
+     * getVerticalPosition()
+     **/
     @Test
     void CreateAttack_getVerticalPosition_equalsShouldBeTrue() {
         Attack attack = new Attack(3, 0);
@@ -43,13 +47,16 @@ class AttackTest {
         Assertions.assertNotEquals(0,resultVerticalPosition);
     }
 
+    /*********************************
+     * getAttackStatus
+     **/
     @Test
     void CreateAttack_getAttackStatus_equalsShouldBeTrue() {
         Attack attack = new Attack(0, 5);
 
         AttackStatus resultAttackStatus = attack.getAttackStatus();
 
-        Assertions.assertEquals(AttackStatus.ATTACKING,resultAttackStatus);
+        Assertions.assertEquals(AttackStatus.ATTACKING, resultAttackStatus);
     }
 
     @Test

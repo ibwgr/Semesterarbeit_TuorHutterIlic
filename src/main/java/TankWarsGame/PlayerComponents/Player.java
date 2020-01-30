@@ -1,12 +1,9 @@
-package TankWarsGame.Player;
+package TankWarsGame.PlayerComponents;
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class Player {
-    public String name;
+    private String name;
     public Field field;
 
     public Player(){

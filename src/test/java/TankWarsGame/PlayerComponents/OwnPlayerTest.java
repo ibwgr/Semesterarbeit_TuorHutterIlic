@@ -1,11 +1,10 @@
-package TankWarsGame.Player;
+package TankWarsGame.PlayerComponents;
 
 import TankWarsGame.Field.Field;
 import TankWarsGame.Field.FieldStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
