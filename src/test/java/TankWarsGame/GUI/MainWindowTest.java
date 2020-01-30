@@ -3,6 +3,8 @@ package TankWarsGame.GUI;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MainWindowTest {
@@ -36,17 +38,35 @@ class MainWindowTest {
         Assertions.assertEquals(false, MainWindow.getOpponentPlayerTurn());
     }
 
-
-
     @Test
-    void getOwnScore() {
+    void getOwnScore_expectGameScore0_assertEqualsTrue() {
+        AtomicInteger gameScore = MainWindow.getOwnScore();
+
+        Assertions.assertEquals(0, gameScore.intValue());
     }
 
     @Test
-    void getOpponentScore() {
+    void getOpponentScore_expectGameScore0_assertEqualsTrue() {
+        AtomicInteger gameScore = MainWindow.getOpponentScore();
+
+        Assertions.assertEquals(0, gameScore.intValue());
     }
 
     @Test
-    void setNumberOfTanksToPlace() {
+    void getNumberOfTanksToPlace_assertEqualsFalse() {
+        MainWindow.setNumberOfTanksToPlace(0);
+
+        int numberOfTanksToPlace = MainWindow.getNumberOfTanksToPlace();
+
+        Assertions.assertNotEquals(5,numberOfTanksToPlace);
+    }
+
+    @Test
+    void setNumberOfTanksToPlace_getNumberOfTanksToPlace_assertEqualsTrue() {
+        MainWindow.setNumberOfTanksToPlace(5);
+
+        int numberOfTanksToPlace = MainWindow.getNumberOfTanksToPlace();
+
+        Assertions.assertEquals(5,numberOfTanksToPlace);
     }
 }
