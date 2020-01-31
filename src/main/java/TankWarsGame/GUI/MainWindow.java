@@ -288,7 +288,7 @@ public class MainWindow extends Application {
          * own field *
          * */
 //       Informationoutput
-        labelBottomInfo.setText("Place your tanks! " + numberOfPlacedTanks);
+        labelBottomInfo.setText("Place your tanks! " + "Place " + StartScreen.numberOfTanks + " tanks.");
         labelBottomInfo.setTextAlignment(TextAlignment.CENTER);
 
 
@@ -307,9 +307,6 @@ public class MainWindow extends Application {
         /*********************************
          * opponent field *
          * */
-//      Informationoutput
-        labelBottomInfo.setText("Now, you can attack the Enemy field on the right side!");
-//        labelHitCounterEnemy.setText(string + " / " + StartScreen.numberOfTanks);
         // create cells
         for (int yColumn = 0; yColumn < fieldcount; yColumn++){
             for (int xRow = 0; xRow < fieldcount; xRow++) {
@@ -327,6 +324,8 @@ public class MainWindow extends Application {
         tanksPlaced.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 startupDone = true;
+                //      Informationoutput
+                labelBottomInfo.setText("Now, you can attack the Enemy field on the right side!");
 
                 // single player
                 if ( modeSelect == 0 ) {
