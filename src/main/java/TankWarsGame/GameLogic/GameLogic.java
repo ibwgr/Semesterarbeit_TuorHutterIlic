@@ -81,7 +81,7 @@ public class GameLogic extends Thread {
                     // check if game is finished after own turn
                     if (MainWindow.getOwnScore().intValue() == StartScreen.numberOfTanks) {
                         // game is finished, stop gameSequencer Thread
-                        System.out.println("you win");
+//                        System.out.println("you win");
                         gameSequencer = GameSequencer.GAME_OVER;
                     }else{
                         gameSequencer = GameSequencer.SET_OPPONENT_TURN;
@@ -108,7 +108,7 @@ public class GameLogic extends Thread {
                     // check if game is finished after opponent turn
                     if (MainWindow.getOpponentScore().intValue() == StartScreen.numberOfTanks) {
                         // game is finished, stop gameSequencer Thread
-                        System.out.println("you lose");
+//                        System.out.println("you lose");
                         gameSequencer = GameSequencer.GAME_OVER;
                     }else{
                         gameSequencer = GameSequencer.OWN_TURN;

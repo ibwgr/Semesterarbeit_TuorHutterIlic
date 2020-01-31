@@ -18,6 +18,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -138,6 +139,16 @@ public class MainWindow extends Application {
                     case UNSUCCESSFUL:
                         cell.setFill(Color.BLACK);
                 }
+                if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
+                    System.out.println("You win"); //TODO Rade Ende des Games initiieren
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("You WIN!");
+                    alert.showAndWait();
+                    window.close();
+                    playMusic("./sounds/winner.wav");
+                }
 
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
             }
@@ -156,6 +167,7 @@ public class MainWindow extends Application {
          * own field *
          * */
 //       information.setText("place your tanks"); TODO neues Label @mega
+
 
         // create cells
         for (int yColumn = 0; yColumn<fieldcount; yColumn++){
@@ -249,18 +261,19 @@ public class MainWindow extends Application {
                         // not successful do not increment game score of opponent
                 }
 
-                if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
-                    System.out.println("You win"); //TODO Rade Ende des Games initiieren
-                    playMusic("./sounds/winner.wav");
-                } else if (opponentGameScore.intValue() == StartScreen.numberOfTanks) {
+                if (opponentGameScore.intValue() == StartScreen.numberOfTanks) {
                     System.out.println("You loose"); //TODO Rade Ende des Games initiieren
+                    Alert alertLose = new Alert(Alert.AlertType.INFORMATION);
+                    alertLose.setTitle("Information Dialog");
+                    alertLose.setHeaderText(null);
+                    alertLose.setContentText("You LOSE!");
+                    alertLose.showAndWait();
+                    window.close();
                     playMusic("./sounds/looser.wav");
                 }
                 opponentPlayerTurn.set(false);
             }
         });
-
-
 
         /*********************************
          * CENTRE reagion *
@@ -394,7 +407,6 @@ public class MainWindow extends Application {
         /*******************************************************************************/
         BorderPane mainView = new BorderPane();
         //set Background
-        //TODO Doesn't work yet and buttons/textfields function @rade
         BackgroundImage backgroundMain = new BackgroundImage(new Image("File:images/backgroundWar.jpg" ,1200,800,false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         //set image on gridpane
