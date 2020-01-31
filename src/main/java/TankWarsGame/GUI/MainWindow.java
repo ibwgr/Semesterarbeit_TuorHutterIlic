@@ -262,6 +262,7 @@ public class MainWindow extends Application {
         gridpaneBottom.setAlignment(Pos.CENTER);
         gridpaneBottom.setPrefSize(100, 200);
         gridpaneBottom.setHgap(20);
+        gridpaneBottom.setPadding(new Insets(20));
 
         // add children
         gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, labelHitCounterOwn, labelHitCounterEnemy);
@@ -271,21 +272,23 @@ public class MainWindow extends Application {
         gridpaneBottom.setHalignment(labelBottomInfo, HPos.CENTER);
 
         gridpaneBottom.setConstraints(buttonCancelMain, 17, 1);
-        gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
+        gridpaneBottom.setHalignment(buttonCancelMain, HPos.RIGHT);
 
         gridpaneBottom.setConstraints(labelHitCounterOwn, 0, 0);
         gridpaneBottom.setValignment(labelHitCounterOwn, VPos.TOP);
+        gridpaneBottom.setHalignment(labelHitCounterEnemy, HPos.CENTER);
 
         gridpaneBottom.setConstraints(labelHitCounterEnemy, 17, 0);
         gridpaneBottom.setValignment(labelHitCounterEnemy, VPos.TOP);
+        gridpaneBottom.setHalignment(labelHitCounterEnemy, HPos.CENTER);
 
         //Set gridpane lines true or false (debug)
-        gridpaneBottom.setGridLinesVisible(false);
+        gridpaneBottom.setGridLinesVisible(true);
         /*********************************
          * own field *
          * */
 //       Informationoutput
-        labelBottomInfo.setText("Place your tanks! " + numberOfPlacedTanks);
+        labelBottomInfo.setText("Place your tanks! " + "Place " + StartScreen.numberOfTanks + " tanks.");
         labelBottomInfo.setTextAlignment(TextAlignment.CENTER);
 
 
@@ -304,9 +307,6 @@ public class MainWindow extends Application {
         /*********************************
          * opponent field *
          * */
-//      Informationoutput
-        labelBottomInfo.setText("Now, you can attack the Enemy field on the right side!");
-//        labelHitCounterEnemy.setText(string + " / " + StartScreen.numberOfTanks);
         // create cells
         for (int yColumn = 0; yColumn < fieldcount; yColumn++){
             for (int xRow = 0; xRow < fieldcount; xRow++) {
@@ -324,6 +324,8 @@ public class MainWindow extends Application {
         tanksPlaced.addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 startupDone = true;
+                //      Informationoutput
+                labelBottomInfo.setText("Now, you can attack the Enemy field on the right side!");
 
                 // single player
                 if ( modeSelect == 0 ) {
@@ -408,18 +410,16 @@ public class MainWindow extends Application {
          * Cancel Button *
          * */
         buttonCancelMain.setOnMouseClicked(mouseEvent -> {
-            Platform.runLater(()-> {
-                        GameLogic.gameSequencer = GameSequencer.GAME_OVER;      // stop gameLogic Thread
-                        //ownMatchfield = null;
-                        opponentField = null;
-                        ownField = null;
-                        //opponentMatchfield = null;
-                        ownGameScore.set(0);
-                        opponentGameScore.set(0);
-                        numberOfPlacedTanks.set(0);
-                        startupDone = false;
-                    });
-            StartScreen startscreen = new StartScreen();
+
+            GameLogic.gameSequencer = GameSequencer.GAME_OVER;      // stop gameLogic Thread
+            ownField = null;
+            ownGameScore.set(0);
+            opponentGameScore.set(0);
+            startupDone = false;
+            opponentPlayerTurn = new SimpleBooleanProperty();
+
+            StartScreen startScreen = new StartScreen();
+
             try{
                 startscreen.start(window);
             } catch (Exception e) {
