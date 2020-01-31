@@ -64,8 +64,6 @@ public class StartScreen extends Application {
         buttonCancel.setPrefSize(150,40);
 
         // create Combobox
-//        ObservableList settingGame = FXCollections.observableArrayList(
-//                "Multiplayer", "Singleplayer");
         ComboBox<String> comboBoxGameSetting = new ComboBox<>();
         comboBoxGameSetting.getItems().addAll("Singleplayer", "Multiplayer");
         comboBoxGameSetting.setPrefSize(500, 40);
