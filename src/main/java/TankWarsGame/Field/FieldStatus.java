@@ -1,5 +1,8 @@
 package TankWarsGame.Field;
 
 public enum FieldStatus {
-    EMPTY, TANK, ATTACKED, DESTROYED_TANK
+    EMPTY,
+    TANK,
+    ATTACKED,
+    DESTROYED_TANK
 }
