@@ -29,7 +29,6 @@ import java.util.Objects;
 
 public class IpWindow extends Application {
 
-    public static int playerChoice;
     // main window
     Stage ipwindow;
     // scenes
@@ -103,9 +102,6 @@ public class IpWindow extends Application {
 
         GridPane.setConstraints(textfieldOwnIp, 0, 3);
         GridPane.setHalignment(textfieldOwnIp, HPos.CENTER);
-
-//        GridPane.setConstraints(comboBoxPlayer, 0,5);
-//        GridPane.setHalignment(comboBoxPlayer, HPos.LEFT);
 
         GridPane.setConstraints(buttonConnect, 0,6);
         GridPane.setHalignment(buttonConnect, HPos.LEFT);

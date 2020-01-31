@@ -283,13 +283,13 @@ public class MainWindow extends Application {
         gridpaneBottom.setHalignment(labelHitCounterEnemy, HPos.CENTER);
 
         //Set gridpane lines true or false (debug)
-        gridpaneBottom.setGridLinesVisible(true);
+        gridpaneBottom.setGridLinesVisible(false);
         /*********************************
          * own field *
          * */
 //       Informationoutput
         labelBottomInfo.setText("Place your tanks! " + "Place " + StartScreen.numberOfTanks + " tanks.");
-        labelBottomInfo.setTextAlignment(TextAlignment.CENTER);
+        labelBottomInfo.setAlignment(Pos.CENTER);
 
 
         // create cells
@@ -326,6 +326,7 @@ public class MainWindow extends Application {
                 startupDone = true;
                 //      Informationoutput
                 labelBottomInfo.setText("Now, you can attack the Enemy field on the right side!");
+                labelBottomInfo.setAlignment(Pos.CENTER);
 
                 // single player
                 if ( modeSelect == 0 ) {
@@ -410,6 +411,7 @@ public class MainWindow extends Application {
          * Cancel Button *
          * */
         buttonCancelMain.setOnMouseClicked(mouseEvent -> {
+
             GameLogic.gameSequencer = GameSequencer.GAME_OVER;      // stop gameLogic Thread
             ownField = null;
             ownGameScore.set(0);
@@ -418,6 +420,7 @@ public class MainWindow extends Application {
             opponentPlayerTurn = new SimpleBooleanProperty();
 
             StartScreen startScreen = new StartScreen();
+
             try{
                 startScreen.start(window);
             } catch (Exception e) {
