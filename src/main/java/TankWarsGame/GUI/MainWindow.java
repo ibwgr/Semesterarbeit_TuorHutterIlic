@@ -409,6 +409,12 @@ public class MainWindow extends Application {
          * */
         buttonCancelMain.setOnMouseClicked(mouseEvent -> {
             GameLogic.gameSequencer = GameSequencer.GAME_OVER;      // stop gameLogic Thread
+            ownField = null;
+            ownGameScore.set(0);
+            opponentGameScore.set(0);
+            startupDone = false;
+            opponentPlayerTurn = new SimpleBooleanProperty();
+
             StartScreen startScreen = new StartScreen();
             try{
                 startScreen.start(window);
