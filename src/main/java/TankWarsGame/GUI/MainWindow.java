@@ -148,14 +148,13 @@ public class MainWindow extends Application {
                         cell.setFill(Color.BLACK);
                 }
                 if (ownGameScore.intValue() == StartScreen.numberOfTanks) {
-                    System.out.println("You win"); //TODO Rade Ende des Games initiieren
+                    playMusic("./sounds/winner.wav");
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Information Dialog");
                     alert.setHeaderText(null);
                     alert.setContentText("You WIN!");
                     alert.showAndWait();
                     window.close();
-                    playMusic("./sounds/winner.wav");
                 }
 
                 GameLogic.gameSequencer = GameSequencer.CHECK_IF_WON_AFTER_OWN_TURN;
@@ -385,14 +384,18 @@ public class MainWindow extends Application {
                         // not successful do not increment game score of opponent
                 }
                 if (opponentGameScore.intValue() == StartScreen.numberOfTanks) {
-                    System.out.println("You loose"); //TODO Rade Ende des Games initiieren
-                    Alert alertLose = new Alert(Alert.AlertType.INFORMATION);
-                    alertLose.setTitle("Information Dialog");
-                    alertLose.setHeaderText(null);
-                    alertLose.setContentText("You LOSE!");
-                    alertLose.showAndWait();
-                    window.close();
-                    playMusic("./sounds/looser.wav");
+                    System.out.println("You loose");
+                    //Platformrun later sonst gibt es thread exception
+                    Platform.runLater(()->{
+                        playMusic("./sounds/looser.wav");
+                        Alert alertLose = new Alert(Alert.AlertType.INFORMATION);
+                        alertLose.setTitle("Information Dialog");
+                        alertLose.setHeaderText(null);
+                        alertLose.setContentText("You LOSE!");
+                        alertLose.showAndWait();
+                        window.close();
+
+                    });
                 }
                 opponentPlayerTurn.set(false);
             }
