@@ -109,7 +109,6 @@ public class StartScreen extends Application {
         startGameGrid.setHgap(20);
 
         //set Background image READY FOR WAR
-        //TODO ok?
         BackgroundImage backgroundStart = new BackgroundImage(new Image("File:images/backgroundWar.jpg" ,1200,700,false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
         //set image on gridpane

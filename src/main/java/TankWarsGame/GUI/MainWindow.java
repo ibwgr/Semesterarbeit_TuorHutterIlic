@@ -262,6 +262,7 @@ public class MainWindow extends Application {
         gridpaneBottom.setAlignment(Pos.CENTER);
         gridpaneBottom.setPrefSize(100, 200);
         gridpaneBottom.setHgap(20);
+        gridpaneBottom.setPadding(new Insets(20));
 
         // add children
         gridpaneBottom.getChildren().addAll(labelBottomInfo, buttonCancelMain, labelHitCounterOwn, labelHitCounterEnemy);
@@ -271,16 +272,18 @@ public class MainWindow extends Application {
         gridpaneBottom.setHalignment(labelBottomInfo, HPos.CENTER);
 
         gridpaneBottom.setConstraints(buttonCancelMain, 17, 1);
-        gridpaneBottom.setHalignment(buttonCancelMain, HPos.CENTER);
+        gridpaneBottom.setHalignment(buttonCancelMain, HPos.RIGHT);
 
         gridpaneBottom.setConstraints(labelHitCounterOwn, 0, 0);
         gridpaneBottom.setValignment(labelHitCounterOwn, VPos.TOP);
+        gridpaneBottom.setHalignment(labelHitCounterEnemy, HPos.CENTER);
 
         gridpaneBottom.setConstraints(labelHitCounterEnemy, 17, 0);
         gridpaneBottom.setValignment(labelHitCounterEnemy, VPos.TOP);
+        gridpaneBottom.setHalignment(labelHitCounterEnemy, HPos.CENTER);
 
         //Set gridpane lines true or false (debug)
-        gridpaneBottom.setGridLinesVisible(false);
+        gridpaneBottom.setGridLinesVisible(true);
         /*********************************
          * own field *
          * */
