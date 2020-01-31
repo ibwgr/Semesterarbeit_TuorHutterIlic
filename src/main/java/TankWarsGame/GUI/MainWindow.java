@@ -421,7 +421,7 @@ public class MainWindow extends Application {
             StartScreen startScreen = new StartScreen();
 
             try{
-                startscreen.start(window);
+                startScreen.start(window);
             } catch (Exception e) {
                 e.printStackTrace();
             }
