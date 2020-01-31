@@ -408,10 +408,20 @@ public class MainWindow extends Application {
          * Cancel Button *
          * */
         buttonCancelMain.setOnMouseClicked(mouseEvent -> {
-            GameLogic.gameSequencer = GameSequencer.GAME_OVER;      // stop gameLogic Thread
-            StartScreen startScreen = new StartScreen();
+            Platform.runLater(()-> {
+                        GameLogic.gameSequencer = GameSequencer.GAME_OVER;      // stop gameLogic Thread
+                        //ownMatchfield = null;
+                        opponentField = null;
+                        ownField = null;
+                        //opponentMatchfield = null;
+                        ownGameScore.set(0);
+                        opponentGameScore.set(0);
+                        numberOfPlacedTanks.set(0);
+                        startupDone = false;
+                    });
+            StartScreen startscreen = new StartScreen();
             try{
-                startScreen.start(window);
+                startscreen.start(window);
             } catch (Exception e) {
                 e.printStackTrace();
             }
