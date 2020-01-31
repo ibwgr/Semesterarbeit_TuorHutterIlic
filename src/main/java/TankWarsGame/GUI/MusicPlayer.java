@@ -7,6 +7,9 @@ import java.io.File;
 
 public class MusicPlayer {
 
+    /*********************************
+     * Play sound effects
+     **/
     public static void playMusic(String path)
     {
         try {
@@ -20,6 +23,9 @@ public class MusicPlayer {
         }
     }
 
+    /*********************************
+     * Play theme music contionously
+     **/
     public static void playMusicContinous(String path)
     {
         try {

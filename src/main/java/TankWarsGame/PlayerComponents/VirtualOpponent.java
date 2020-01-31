@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class VirtualOpponent extends Player {
+
     private List<List<Integer>> listRandom;
 
 
@@ -33,6 +34,10 @@ public class VirtualOpponent extends Player {
         setAttackOptions(fieldcount);
     }
 
+
+    public List<List<Integer>> getListRandom() {
+        return listRandom;
+    }
 
     /*********************************
      * override abstract methods
