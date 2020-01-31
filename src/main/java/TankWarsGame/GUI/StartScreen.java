@@ -87,7 +87,7 @@ public class StartScreen extends Application {
         textfieldSquareSide.setAlignment(Pos.CENTER);
         textfieldSquareSide.setStyle("-fx-font-size: 16; -fx-text-fill: #000; -fx-font-family: Monospaced");
 
-        //create image //TODO NOT ACTIVE
+        //create image
         Image imageTank = new Image("https://img.favpng.com/17/12/5/pixel-art-minecraft-tank-png-favpng-iNcdJV2Zszcm0sKjSzSY8VjX4.jpg");
         ImageView imageViewTank = new ImageView();
         imageViewTank.setImage(imageTank);
@@ -180,8 +180,6 @@ public class StartScreen extends Application {
                             if (numberOfTanks <= 10 && numberOfTanks > 0 && numberOfCells <= 10 && numberOfCells >= 5) {
                                 buttonPlay.setDisable(false);
                                 //Set Change fieldsize to invisible. Only way to change fieldsize ReOpen Game
-                //                    textfieldNumberOfTanks.setVisible(false);
-                //                    textfieldSquareSide.setVisible(false); //TODO decide how to do it, rade
                                 textfieldNumberOfTanks.setText(String.valueOf(numberOfTanks));
                                 textfieldNumberOfTanks.setDisable(true);
                                 textfieldSquareSide.setText(String.valueOf(numberOfCells));
@@ -197,7 +195,6 @@ public class StartScreen extends Application {
                             }
                             //Number Of Tanks out of range text in label!
                             else if (numberOfTanks > 10 || numberOfTanks == 0) {
-                                //TODO DEFINE OUTPUTLABEL--rade
                                 System.out.println("the size of the field can be between 1 and 10!");
                                 labelInstruction.setText("number of tanks has to be between 1-10!");
                             } else {
