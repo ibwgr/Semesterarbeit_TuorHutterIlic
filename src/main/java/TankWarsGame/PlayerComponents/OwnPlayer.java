@@ -22,7 +22,6 @@ public class OwnPlayer extends Player {
     public Attack attackField(Attack attack) throws OutOfBoundsException {
         // check if position is within field boundaries
         this.checkIfInBounds(attack.getHorizontalPosition(), attack.getVerticalPosition());
-
         return super.field.attackField(attack);
     }
 
