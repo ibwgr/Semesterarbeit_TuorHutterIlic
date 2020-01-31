@@ -10,9 +10,11 @@ Wir arbeiten zu dritt an einem "Tank Wars" Spiel (ähnlich wie Schiffe versenken
 Installationsanleitung:
 1. Clone Git Repository (Master branch)
 2. Setup SDK (vielleicht wird ein anderer SDK benutzt)
-3. Ab SDK 11 muss ein Pathfix(--module-path ${PATH_TO_FX} --add-modules javafx.controls,javafx.fxml) bei intellij unter run edit eingefügt werden und die Libraries von JavaFX hinzugefügt werden.
-4. Für Unit Tests-> Maven -> Rechtsklick auf install ->run
-5. Die TankWars_Application.java öffnen und ausführen
+3. Ab SDK 11 muss ein Pathfix(--module-path ${PATH_TO_FX} --add-modules javafx.controls,javafx.fxml) bei intellij unter run edit      
+   eingefügt werden und die Libraries von JavaFX hinzugefügt werden.
+4. Im Ordner src sind die Unit Tests und die Java Applikation
+5. Für Unit Tests-> Maven -> Rechtsklick auf install ->run
+6. Die TankWars_Application.java öffnen und ausführen
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Spielanleitung:
