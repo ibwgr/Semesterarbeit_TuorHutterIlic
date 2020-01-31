@@ -90,6 +90,10 @@ public class MainWindow extends Application {
         MainWindow.numberOfTanksToPlace = numberOfTanksToPlace;
     }
 
+    public static int getNumberOfTanksToPlace(){
+        return MainWindow.numberOfTanksToPlace;
+    }
+
     /*******************************************************************************/
     // create own cells
     /*******************************************************************************/
