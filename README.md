@@ -2,10 +2,22 @@
 Semesterarbeit von Stefan Hutter, Philipp Tuor, Rade Ilic
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 Willkomen auf unserem Git Repository für unsere Semesterarbeit.
 
 Wir arbeiten zu dritt an einem "Panzer zerstören" Spiel (ähnlich wie Schiffe versenken).
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Installationsanleitung:
+1. Clone Git Repository (Master branch)
+2. Setup SDK (vielleicht wird ein anderer SDK benutzt)
+3. Ab SDK 11 muss ein Pathfix(--module-path ${PATH_TO_FX} --add-modules javafx.controls,javafx.fxml) bei intellij unter run edit eingefügt werden und die Libraries von JavaFX hinzugefügt werden.
+4. Für Unit Tests-> Maven -> Rechtsklick auf install ->run
+5. Die TankWars_Application.java öffnen und ausführen
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Spielanleitung:
+- Als Spieler wird man mit Instruction Labels durch das Spiel geführt.
+- Bei Problemen um Mehrspielermodus, vergleichen Sie die angezeigete IP Adresse im Game mit der Netzwerkkonfiguration ihres Rechners (bei Windows ipconfig im Terminal). Es kann sein, wenn sie mehrere aktive Netzwerkkonfigurationen haben, dass im Game die falsche ip angezeigt wird.
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Folgende Regeln gelten in unserem Repository:
