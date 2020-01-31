@@ -5,7 +5,6 @@ public class Tank {
     private int length = 0;
     private int horizontalPosition;
     private int verticalPosition;
-//=======
 
 
     /*********************************

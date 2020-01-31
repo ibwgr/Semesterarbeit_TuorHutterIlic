@@ -42,8 +42,6 @@ public class IpWindow extends Application {
         GridPane gridpaneIpSetting = new GridPane();
         //set Background
         gridpaneIpSetting.setStyle("-fx-background-color: lightgray");
-        //TODO Doesn't work yet and buttons/textfields function @rade
-        //TODO make WINDOW NOT RESIZABLE!!!!!!!!!!!!!!!!!!!!@rade
         gridpaneIpSetting .setVgap(10);
         gridpaneIpSetting .setHgap(10);
         gridpaneIpSetting .setPadding(new Insets (50, 50, 50, 50));
