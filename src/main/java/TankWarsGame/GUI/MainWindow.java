@@ -7,6 +7,7 @@ import TankWarsGame.GameLogic.GameLogic;
 import TankWarsGame.GameLogic.GameSequencer;
 import TankWarsGame.PlayerComponents.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -24,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,6 +44,7 @@ public class MainWindow extends Application {
     public static int modeSelect;                                               // 0 = singleplayer , 1 = multiplayer Player
     public static String opponentHostAddress;                                   //server address
     public static int port = 63211;;                                            // Port-number
+    public static String string;
 
 
 
@@ -118,7 +121,7 @@ public class MainWindow extends Application {
     /*******************************************************************************/
     // create opponent cells
     /*******************************************************************************/
-    private Cell createOpponentCell(int horizontal, int vertical) {
+    private Cell createOpponentCell(int horizontal, int vertical, Label label) {
 
         Cell cell = new Cell();
         cell.setOnMouseClicked(event -> {
@@ -139,6 +142,7 @@ public class MainWindow extends Application {
                     case SUCCESSFUL:
                         cell.setFill(Color.BLUE);
                         ownGameScore.getAndIncrement();
+                        label.setText(String.valueOf(ownGameScore.intValue()) + (" / ") + StartScreen.numberOfTanks);
                         break;
                     case UNSUCCESSFUL:
                         cell.setFill(Color.BLACK);
@@ -166,119 +170,6 @@ public class MainWindow extends Application {
     // create scene
     /*******************************************************************************/
     private Scene createScene(){
-
-        /*********************************
-         * own field *
-         * */
-//       information.setText("place your tanks"); TODO neues Label @mega
-
-
-        // create cells
-        for (int yColumn = 0; yColumn<fieldcount; yColumn++){
-            for (int xRow = 0; xRow<fieldcount; xRow++) {
-                Cell cells = createOwnCell(yColumn, xRow);
-                ownField.add(cells, yColumn, xRow);
-            }
-        }
-
-        ownField.setStyle("-fx-background-color: white;");
-        ownField.setGridLinesVisible(true);
-
-
-        /*********************************
-         * opponent field *
-         * */
-//      information.setText("start attacking your opponent"); TODO new label @rade
-
-        // create cells
-        for (int yColumn = 0; yColumn < fieldcount; yColumn++){
-            for (int xRow = 0; xRow < fieldcount; xRow++) {
-                Cell cellsOpponent = createOpponentCell(yColumn, xRow);
-                opponentField.add(cellsOpponent, yColumn, xRow);
-            }
-        }
-
-
-        /*********************************
-         * check iff all own tanks have been placed
-         * show opponent field as soon all own tanks have been placed
-         * */
-        tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(StartScreen.numberOfTanks));
-        tanksPlaced.addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
-                startupDone = true;
-
-                // single player
-                if ( modeSelect == 0 ) {
-                    GameLogic.gameSequencer = GameSequencer.OWN_TURN;
-                    opponentPlayerTurn.set(false);
-
-                }
-                // multi player
-                else {
-                    GameLogic.gameSequencer = GameSequencer.CHECK_IF_OPPONENT_IS_WAITING_FOR_CONNECTION;
-                    opponentPlayerTurn.set(false);
-                }
-
-            }
-            opponentField.setStyle("-fx-background-color: white;");
-            opponentField.setGridLinesVisible(true);
-        });
-
-
-
-        /*********************************
-         * opponent turn
-         * */
-        opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
-            if ( getOpponentPlayerTurn()){
-//                    int[] virtualAttack = opponentPlayer.getRandom();
-//                    Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
-
-                    Attack attackBot = opponentPlayer.getAttack();
-
-                    try {
-                        attackBot = ownPlayer.attackField(attackBot);
-                        playMusic("./sounds/shot.wav");
-                    } catch (OutOfBoundsException oob) {
-                    }
-
-                ObservableList<Node> childrens = ownField.getChildren();
-                for (Node node : childrens)
-                    if ((ownField.getRowIndex(node) ==  attackBot.getVerticalPosition()) && (ownField.getColumnIndex(node) == attackBot.getHorizontalPosition())) {
-                        Cell cell1 = new Cell();
-                        cell1 = (Cell) node;
-                        if (cell1.getFill() == Color.GREEN) {
-                            cell1.setFill(Color.RED);
-                        } else {
-                            cell1.setFill(Color.BLACK);
-                        }
-
-                        break;
-                    }
-
-                switch (attackBot.getAttackStatus()) {
-                    case SUCCESSFUL:
-                        opponentGameScore.getAndIncrement();
-                        break;
-                    case UNSUCCESSFUL:
-                        // not successful do not increment game score of opponent
-                }
-
-                if (opponentGameScore.intValue() == StartScreen.numberOfTanks) {
-                    System.out.println("You loose"); //TODO Rade Ende des Games initiieren
-                    Alert alertLose = new Alert(Alert.AlertType.INFORMATION);
-                    alertLose.setTitle("Information Dialog");
-                    alertLose.setHeaderText(null);
-                    alertLose.setContentText("You LOSE!");
-                    alertLose.showAndWait();
-                    window.close();
-                    playMusic("./sounds/looser.wav");
-                }
-                opponentPlayerTurn.set(false);
-            }
-        });
-
         /*********************************
          * CENTRE reagion *
          * */
@@ -301,22 +192,22 @@ public class MainWindow extends Application {
 
 
         /*********************************
-        * TOP region Layout *
-        * */
+         * TOP region Layout *
+         * */
         // create label
-         Label labelTopOwnField = new Label(" Own Field ");
-         labelTopOwnField.setPrefSize(500,40);
-         labelTopOwnField.setAlignment(Pos.CENTER);
-         labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
-         labelTopOwnField.setWrapText(true);
+        Label labelTopOwnField = new Label(" Own Field ");
+        labelTopOwnField.setPrefSize(500,40);
+        labelTopOwnField.setAlignment(Pos.CENTER);
+        labelTopOwnField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+        labelTopOwnField.setWrapText(true);
 
-         Label labelTopEnemyField = new Label(" Enemy Field ");
-         labelTopEnemyField.setPrefSize(500,40);
-         labelTopEnemyField.setAlignment(Pos.CENTER);
-         labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
-         labelTopEnemyField.setWrapText(true);
+        Label labelTopEnemyField = new Label(" Enemy Field ");
+        labelTopEnemyField.setPrefSize(500,40);
+        labelTopEnemyField.setAlignment(Pos.CENTER);
+        labelTopEnemyField.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 16; -fx-font-family: monospace");
+        labelTopEnemyField.setWrapText(true);
 
-         // Set gridpaneTop
+        // Set gridpaneTop
         GridPane gridPaneTop = new GridPane();
         gridPaneTop.setAlignment(Pos.CENTER);
         gridPaneTop.setPrefSize(400, 50);
@@ -355,14 +246,14 @@ public class MainWindow extends Application {
         buttonInvisible.setVisible(false);
 
         // create textfield
-        Label labelHitCounterOwn = new Label("Your tanks destroyed");
-        labelHitCounterOwn.setPrefSize(150, 40);
+        Label labelHitCounterOwn = new Label("Your Tanks destroyed");
+        labelHitCounterOwn.setPrefSize(300, 40);
         //set pre Text in Textfield and style
         labelHitCounterOwn.setAlignment(Pos.CENTER);
         labelHitCounterOwn.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 14; -fx-font-family: monospace");
 
         Label labelHitCounterEnemy = new Label("Enemy tanks destroyed");
-        labelHitCounterEnemy.setPrefSize(150, 40);
+        labelHitCounterEnemy.setPrefSize(300, 40);
         //set pre Text in Textfield and style
         labelHitCounterEnemy.setAlignment(Pos.CENTER);
         labelHitCounterEnemy.setStyle("-fx-border-color:deepskyblue; -fx-background-color: lightgray; -fx-font-size: 14; -fx-font-family: monospace");
@@ -391,6 +282,124 @@ public class MainWindow extends Application {
 
         //Set gridpane lines true or false (debug)
         gridpaneBottom.setGridLinesVisible(false);
+        /*********************************
+         * own field *
+         * */
+//       Informationoutput
+        labelBottomInfo.setText("Place your tanks! " + numberOfPlacedTanks);
+        labelBottomInfo.setTextAlignment(TextAlignment.CENTER);
+
+
+        // create cells
+        for (int yColumn = 0; yColumn<fieldcount; yColumn++){
+            for (int xRow = 0; xRow<fieldcount; xRow++) {
+                Cell cells = createOwnCell(yColumn, xRow);
+                ownField.add(cells, yColumn, xRow);
+            }
+        }
+
+        ownField.setStyle("-fx-background-color: white;");
+        ownField.setGridLinesVisible(true);
+
+
+        /*********************************
+         * opponent field *
+         * */
+//      Informationoutput
+        labelBottomInfo.setText("Now, you can attack the Enemy field on the right side!");
+//        labelHitCounterEnemy.setText(string + " / " + StartScreen.numberOfTanks);
+        // create cells
+        for (int yColumn = 0; yColumn < fieldcount; yColumn++){
+            for (int xRow = 0; xRow < fieldcount; xRow++) {
+                Cell cellsOpponent = createOpponentCell(yColumn, xRow, labelHitCounterEnemy);
+                opponentField.add(cellsOpponent, yColumn, xRow);
+            }
+        }
+
+
+        /*********************************
+         * check iff all own tanks have been placed
+         * show opponent field as soon all own tanks have been placed
+         * */
+        tanksPlaced.bind(numberOfPlacedTanks.isEqualTo(StartScreen.numberOfTanks));
+        tanksPlaced.addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                startupDone = true;
+
+                // single player
+                if ( modeSelect == 0 ) {
+                    GameLogic.gameSequencer = GameSequencer.OWN_TURN;
+                    opponentPlayerTurn.set(false);
+                }
+                // multi player
+                else {
+                    GameLogic.gameSequencer = GameSequencer.CHECK_IF_OPPONENT_IS_WAITING_FOR_CONNECTION;
+                    opponentPlayerTurn.set(false);
+                }
+
+            }
+            opponentField.setStyle("-fx-background-color: white;");
+            opponentField.setGridLinesVisible(true);
+        });
+
+
+        /*********************************
+         * opponent turn
+         * */
+        opponentPlayerTurn.addListener((observable, oldValue, newValue) -> {
+            if ( getOpponentPlayerTurn()){
+//                    int[] virtualAttack = opponentPlayer.getRandom();
+//                    Attack attackBot = new Attack(virtualAttack[0], virtualAttack[1]);
+
+                    Attack attackBot = opponentPlayer.getAttack();
+
+                    try {
+                        attackBot = ownPlayer.attackField(attackBot);
+                        playMusic("./sounds/shot.wav");
+                    } catch (OutOfBoundsException oob) {
+                    }
+
+                ObservableList<Node> childrens = ownField.getChildren();
+                for (Node node : childrens)
+                    if ((ownField.getRowIndex(node) ==  attackBot.getVerticalPosition()) && (ownField.getColumnIndex(node) == attackBot.getHorizontalPosition())) {
+                        Cell cell1 = new Cell();
+                        cell1 = (Cell) node;
+                        if (cell1.getFill() == Color.GREEN) {
+                            cell1.setFill(Color.RED);
+                            Platform.runLater(()->{
+                                labelHitCounterOwn.setText(String.valueOf(opponentGameScore.intValue()) + (" / ") + StartScreen.numberOfTanks);
+                            });
+
+                        } else {
+                            cell1.setFill(Color.BLACK);
+                        }
+
+                        break;
+                    }
+
+                switch (attackBot.getAttackStatus()) {
+                    case SUCCESSFUL:
+                        opponentGameScore.getAndIncrement();
+                        break;
+                    case UNSUCCESSFUL:
+                        // not successful do not increment game score of opponent
+                }
+                if (opponentGameScore.intValue() == StartScreen.numberOfTanks) {
+                    System.out.println("You loose"); //TODO Rade Ende des Games initiieren
+                    Alert alertLose = new Alert(Alert.AlertType.INFORMATION);
+                    alertLose.setTitle("Information Dialog");
+                    alertLose.setHeaderText(null);
+                    alertLose.setContentText("You LOSE!");
+                    alertLose.showAndWait();
+                    window.close();
+                    playMusic("./sounds/looser.wav");
+                }
+                opponentPlayerTurn.set(false);
+            }
+        });
+
+
+
 
         /*********************************
          * Cancel Button *
@@ -404,7 +413,6 @@ public class MainWindow extends Application {
                 e.printStackTrace();
             }
         });
-
 
         /*******************************************************************************/
         // main view - insert all regions
